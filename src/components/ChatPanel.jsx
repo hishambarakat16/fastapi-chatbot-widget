@@ -42,9 +42,7 @@ export default function ChatPanel({
 
       await sendMessageStream(sessionId, text, {
         onDelta: (_delta, full) => {
-          // Update the last assistant message (placeholder) as we stream
           setMessages((prev) => {
-            // Find the last assistant message (most recent)
             const idx = (() => {
               for (let i = prev.length - 1; i >= 0; i--) {
                 if (prev[i].role === "assistant") return i;

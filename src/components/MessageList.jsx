@@ -1,4 +1,10 @@
 import React, { useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
+
+function normalizeText(s) {
+  s = (s || "").replace(/\r\n/g, "\n");
+  return s.replace(/\n{2,}/g, "\n");
+}
 
 export default function MessageList({ messages, botName = "Assistant" }) {
   const endRef = useRef(null);
@@ -11,15 +17,11 @@ export default function MessageList({ messages, botName = "Assistant" }) {
     <div className="thread">
       {messages.map((m, idx) => {
         const isUser = m.role === "user";
-        const ts = m.ts ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "";
 
         if (isUser) {
           return (
             <div key={idx} className="msg-row msg-right">
-              <div className="bubble user">
-                <div className="msg-meta">You {ts ? `· ${ts}` : ""}</div>
-                {m.text}
-              </div>
+              <div className="bubble user">{m.text}</div>
             </div>
           );
         }
@@ -28,13 +30,19 @@ export default function MessageList({ messages, botName = "Assistant" }) {
           <div key={idx} className="msg-row">
             <div className="avatar">S</div>
             <div className="bubble bot">
-              <div className="msg-meta">{botName} {ts ? `· ${ts}` : ""}</div>
-              {m.text}
+            <ReactMarkdown
+              components={{
+                p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
+                ol: ({ children }) => <ol style={{ margin: "0 0 0 18px" }}>{children}</ol>,
+                li: ({ children }) => <li style={{ margin: "2px 0" }}>{children}</li>,
+              }}
+            >
+              {normalizeText(m.text)}
+            </ReactMarkdown>
             </div>
           </div>
         );
       })}
-
       <div ref={endRef} />
     </div>
   );
