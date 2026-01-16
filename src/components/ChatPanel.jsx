@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { sendMessageStream } from "../api.js";
+import { sendMessageStream, sendFeedback } from "../api.js";
 import MessageList from "./MessageList.jsx";
 import MessageInput from "./MessageInput.jsx";
 
@@ -13,6 +13,8 @@ export default function ChatPanel({
   setStatus,
 }) {
   const [draft, setDraft] = useState("");
+  const [feedbackById, setFeedbackById] = useState({}); // { [messageId]: "thumbs_up" | "thumbs_down" }
+
   const hasSession = !!sessionId;
 
   const timeLabel = useMemo(() => {
@@ -25,7 +27,10 @@ export default function ChatPanel({
     if (!text) return;
 
     if (!sessionId) {
-      setStatus((prev) => ({ ...prev, error: "No session. Start a session in the inspector first." }));
+      setStatus((prev) => ({
+        ...prev,
+        error: "No session. Start a session in the inspector first.",
+      }));
       return;
     }
 
@@ -34,22 +39,21 @@ export default function ChatPanel({
     setDraft("");
 
     // Append assistant placeholder we will stream into
-    const assistantIndex = messages.length + 1; // approximate next index after setMessages
     setMessages((prev) => [...prev, { role: "assistant", text: "", ts: new Date().toISOString() }]);
 
     try {
       setStatus({ busy: true, error: null, traceId: null });
 
-      await sendMessageStream(sessionId, text, {
+      const result = await sendMessageStream(sessionId, text, {
         onDelta: (_delta, full) => {
           setMessages((prev) => {
-            const idx = (() => {
-              for (let i = prev.length - 1; i >= 0; i--) {
-                if (prev[i].role === "assistant") return i;
+            let idx = -1;
+            for (let i = prev.length - 1; i >= 0; i--) {
+              if (prev[i].role === "assistant") {
+                idx = i;
+                break;
               }
-              return -1;
-            })();
-
+            }
             if (idx === -1) return prev;
 
             const next = prev.slice();
@@ -59,9 +63,60 @@ export default function ChatPanel({
         },
       });
 
+      // Attach messageId/traceId to the latest assistant message
+      setMessages((prev) => {
+        let idx = -1;
+        for (let i = prev.length - 1; i >= 0; i--) {
+          if (prev[i].role === "assistant") {
+            idx = i;
+            break;
+          }
+        }
+        if (idx === -1) return prev;
+
+        const next = prev.slice();
+        next[idx] = {
+          ...next[idx],
+          text: result?.text ?? next[idx].text,
+          messageId: result?.messageId ?? null,
+          traceId: result?.traceId ?? null,
+        };
+        return next;
+      });
+
       setStatus({ busy: false, error: null, traceId: null });
     } catch (e) {
       setStatus({ busy: false, error: e?.message || "send failed", traceId: null });
+    }
+  }
+
+  async function onFeedback({ feedback, messageId }) {
+    if (!sessionId) return;
+    if (!messageId) {
+      setStatus((prev) => ({ ...prev, error: "Cannot send feedback: missing messageId" }));
+      return;
+    }
+
+    if (feedbackById[messageId]) return;
+
+    // optimistic lock
+    setFeedbackById((prev) => ({ ...prev, [messageId]: feedback }));
+
+    try {
+      await sendFeedback(sessionId, {
+        feedback,
+        message_id: messageId,
+        reason: null,
+        metadata: { source: "react_tester" },
+      });
+    } catch (e) {
+      // rollback if failed
+      setFeedbackById((prev) => {
+        const next = { ...prev };
+        delete next[messageId];
+        return next;
+      });
+      setStatus((prev) => ({ ...prev, error: e?.message || "feedback failed" }));
     }
   }
 
@@ -107,7 +162,7 @@ export default function ChatPanel({
           </div>
         ) : null}
 
-        <MessageList messages={messages} botName={botName} />
+        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById}/>
 
         <div className="small-muted mt-2">{status.busy ? "Sending..." : ""}</div>
 

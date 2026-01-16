@@ -90,7 +90,6 @@ export async function sendMessage(sessionId, text) {
     throw new Error(data?.detail || data?.error || "send_message_failed");
   return data;
 }
-
 export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
   const r = await fetch(
     `/api/v1/chat/session/${encodeURIComponent(sessionId)}/message:stream`,
@@ -109,10 +108,13 @@ export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
     throw new Error(data?.detail || data?.error || "stream_failed");
   }
 
+  // IMPORTANT: capture headers once (does not affect streaming)
+  const messageId = r.headers.get("x-message-id");
+  const traceId = r.headers.get("x-trace-id");
+
   const reader = r.body.getReader();
   const decoder = new TextDecoder("utf-8");
 
-  let buffer = "";
   let fullText = "";
 
   while (true) {
@@ -127,5 +129,29 @@ export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
     if (onDelta) onDelta(chunk, fullText);
   }
 
-  return fullText;
+  // Return text + ids so caller can attach to the assistant message
+  return { text: fullText, messageId, traceId };
+}
+
+export async function sendFeedback(
+  sessionId,
+  { feedback, message_id, reason, metadata } = {}
+) {
+  const r = await fetch(
+    `/api/v1/chat/session/${encodeURIComponent(sessionId)}/feedback`,
+    {
+      method: "POST",
+      headers: authHeaders({ "Content-Type": "application/json" }),
+      body: JSON.stringify({
+        feedback,
+        message_id,
+        reason: reason ?? null,
+        metadata: metadata ?? null,
+      }),
+    }
+  );
+
+  const data = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(data?.detail || data?.error || "feedback_failed");
+  return data;
 }
