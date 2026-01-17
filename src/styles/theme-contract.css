@@ -1,0 +1,41 @@
+/* This file is the contract: only semantic tokens used by the app */
+:root {
+  --app-bg: initial;
+  --app-bg-overlay: initial;
+
+  --text-1: initial;
+  --text-2: initial;
+  --text-3: initial;
+
+  --surface-1: initial;
+  --surface-2: initial;
+  --border-1: initial;
+  --border-2: initial;
+
+  --shadow-1: initial;
+  --shadow-2: initial;
+
+  --primary: initial;
+  --primary-contrast: initial;
+
+  --widget-bg: initial;
+  --widget-header-bg: initial;
+  --widget-body-bg: initial;
+  --widget-footer-bg: initial;
+
+  --widget-user-bubble: initial;
+  --widget-user-text: initial;
+  --widget-bot-bubble: initial;
+  --widget-bot-text: initial;
+
+  --console-bg: initial;
+  --console-border: initial;
+  --console-ts: initial;
+  --console-line: initial;
+  --console-warn: initial;
+  --console-error: initial;
+
+  --input-bg: initial;
+  --input-border: initial;
+  --input-focus: initial;
+}

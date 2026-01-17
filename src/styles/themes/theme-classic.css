@@ -1,4 +1,5 @@
-:root {
+/* Classic (light, clean) */
+:root[data-theme="classic"] {
   /* App background */
   --app-bg: #f4f5f7;
   --app-bg-overlay:
@@ -61,9 +62,4 @@
   --console-line: rgba(11,18,32,.72);
   --console-warn: #b45309;
   --console-error: #b91c1c;
-
-  /* Radius */
-  --r-lg: 18px;
-  --r-md: 14px;
-  --r-sm: 12px;
 }

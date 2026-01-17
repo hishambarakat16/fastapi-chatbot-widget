@@ -22,16 +22,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  color: var(--ink);
+  color: var(--text-1);
 
   /* Overall theme background */
-  background:
-    radial-gradient(900px 500px at 12% 12%, rgba(139, 63, 122, 0.14), transparent 60%),
-    radial-gradient(750px 420px at 88% 16%, rgba(47, 109, 246, 0.12), transparent 55%),
-    radial-gradient(900px 520px at 45% 110%, rgba(34, 197, 94, 0.10), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0)),
-    var(--bg);
-
+  background: var(--app-bg-overlay), var(--app-bg);
   background-attachment: fixed;
 }
 
@@ -46,18 +40,19 @@ a:hover {
 
 /* Selection */
 ::selection {
-  background: rgba(47, 109, 246, 0.20);
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
 }
 
 /* Small helper */
-.small-muted {
-  color: var(--muted);
+.small-muted,
+.text-muted {
+  color: var(--text-3) !important;
   font-size: 12px;
 }
 
 /* Better focus without ugly outlines everywhere */
 :focus-visible {
-  outline: 2px solid rgba(47, 109, 246, 0.55);
+  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
   outline-offset: 2px;
 }
 
@@ -67,4 +62,79 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+/* Bootstrap overrides (theme-aligned) */
+.btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: color-mix(in srgb, var(--primary) 85%, var(--text-1) 15%);
+  border-color: color-mix(in srgb, var(--primary) 80%, var(--text-1) 20%);
+  color: var(--primary-contrast);
+}
+
+.btn-secondary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-contrast);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+  background: color-mix(in srgb, var(--primary) 80%, var(--text-1) 20%);
+  border-color: color-mix(in srgb, var(--primary) 75%, var(--text-1) 25%);
+  color: var(--primary-contrast);
+}
+
+.btn-outline-secondary {
+  color: var(--text-2);
+  border-color: var(--border-1);
+  background: transparent;
+}
+
+.btn-outline-secondary:hover,
+.btn-outline-secondary:focus {
+  background: color-mix(in srgb, var(--surface-3) 75%, var(--primary) 25%);
+  color: var(--text-1);
+  border-color: var(--border-1);
+}
+
+.btn-outline-danger {
+  color: var(--danger);
+  border-color: var(--danger);
+  background: transparent;
+}
+
+.btn-outline-danger:hover,
+.btn-outline-danger:focus {
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.form-select,
+.form-control {
+  background-color: var(--surface-2);
+  border-color: var(--border-1);
+  color: var(--text-1);
+}
+
+.form-select:focus,
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--primary) 25%, transparent);
+}
+
+.form-check-input {
+  border-color: var(--border-1);
+}
+
+.form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
 }

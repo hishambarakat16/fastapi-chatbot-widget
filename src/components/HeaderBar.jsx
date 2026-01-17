@@ -5,6 +5,8 @@ export default function HeaderBar({
   hint,
   showInspector,
   onToggleInspector,
+  theme,
+  onThemeChange,
   authed = false,
   onLogout,
 }) {
@@ -18,6 +20,17 @@ export default function HeaderBar({
 
         <div className="d-flex align-items-center gap-2">
           <span className="kbd-hint">Ctrl+Enter</span>
+
+          <select
+            className="form-select form-select-sm"
+            aria-label="Theme"
+            style={{ width: 120 }}
+            value={theme}
+            onChange={(e) => onThemeChange(e.target.value)}
+          >
+            <option value="classic">Classic</option>
+            <option value="lux">Lux</option>
+          </select>
 
           <button
             className={`btn btn-sm ${showInspector ? "btn-outline-secondary" : "btn-secondary"}`}

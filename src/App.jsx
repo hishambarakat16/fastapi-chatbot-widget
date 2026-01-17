@@ -8,11 +8,12 @@ import ChatPanel from "./components/ChatPanel.jsx";
 import LoginPage from "./components/LoginPage.jsx";
 import { clearToken, getToken } from "./api.js";
 
-export default function App() {
+export default function App({ initialTheme = "classic" }) {
   const [session, setSession] = useState(null);
   const [messages, setMessages] = useState([]);
   const [status, setStatus] = useState({ busy: false, error: null, traceId: null });
   const [showInspector, setShowInspector] = useState(true);
+  const [theme, setTheme] = useState(initialTheme);
 
   const [authed, setAuthed] = useState(() => !!getToken());
 
@@ -41,6 +42,12 @@ export default function App() {
     setStatus({ busy: false, error: null, traceId: null });
   }
 
+  function updateTheme(nextTheme) {
+    setTheme(nextTheme);
+    document.documentElement.dataset.theme = nextTheme;
+    localStorage.setItem("theme", nextTheme);
+  }
+
   return (
     <div className="container py-4 app-shell">
       <HeaderBar
@@ -48,6 +55,8 @@ export default function App() {
         // hint="Dev proxy: /api → http://localhost:8000"
         showInspector={showInspector}
         onToggleInspector={() => setShowInspector((v) => !v)}
+        theme={theme}
+        onThemeChange={updateTheme}
         authed={authed}
         onLogout={logout}
       />

@@ -1,9 +1,57 @@
 .card-glass {
-  background: var(--panel);
-  border: 1px solid var(--border);
+  background: var(--surface-1);
+  border: 1px solid var(--border-1);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-1);
+  backdrop-filter: var(--topbar-blur);
+}
+
+.console-box {
+  background: var(--console-bg);
+  border: 1px solid var(--console-border);
+  border-radius: var(--r-md);
+  padding: 10px;
+  overflow: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+}
+
+.console-line {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 8px;
+  padding: 4px 0;
+  color: var(--console-line);
+  border-bottom: 1px solid var(--console-border);
+}
+
+.console-line:last-child {
+  border-bottom: 0;
+}
+
+.console-ts {
+  color: var(--console-ts);
+  font-variant-numeric: tabular-nums;
+}
+
+.console-level {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--console-line);
+}
+
+.console-text {
+  color: var(--console-line);
+}
+
+.console-line.lvl-warn .console-level,
+.console-line.lvl-warn .console-text {
+  color: var(--console-warn);
+}
+
+.console-line.lvl-error .console-level,
+.console-line.lvl-error .console-text {
+  color: var(--console-error);
 }
 
 /* If your ConsolePanel uses .console-box, let it expand */

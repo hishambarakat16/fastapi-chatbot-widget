@@ -1,0 +1,65 @@
+/* Lux (dark, rich, techy) */
+:root[data-theme="lux"] {
+  /* App background */
+  --app-bg: #070A12;
+  --app-bg-overlay:
+    radial-gradient(1100px 650px at 12% 8%, rgba(91, 33, 182, .22), transparent 62%),
+    radial-gradient(900px 600px at 88% 12%, rgba(14, 165, 233, .16), transparent 60%),
+    radial-gradient(800px 520px at 50% 115%, rgba(16, 185, 129, .10), transparent 62%);
+
+  /* Text */
+  --text-1: rgba(255,255,255,.92);
+  --text-2: rgba(255,255,255,.72);
+  --text-3: rgba(255,255,255,.52);
+
+  /* Surfaces */
+  --surface-1: rgba(255,255,255,.06); /* glass cards */
+  --surface-2: rgba(255,255,255,.08); /* solid-ish cards */
+  --surface-3: rgba(255,255,255,.10); /* subtle fills */
+
+  /* Borders */
+  --border-1: rgba(255,255,255,.12);
+  --border-2: rgba(255,255,255,.08);
+
+  /* Accents */
+  --primary: #6D5EF7;               /* lux violet-blue */
+  --primary-contrast: #0b0f1a;
+  --success: #22c55e;
+  --danger: #fb7185;
+
+  /* Shadows (deeper for dark) */
+  --shadow-1: 0 12px 34px rgba(0,0,0,.38);
+  --shadow-2: 0 18px 70px rgba(0,0,0,.52);
+
+  /* Header / topbar */
+  --topbar-bg: rgba(255,255,255,.06);
+  --topbar-blur: blur(12px);
+
+  /* Widget */
+  --widget-bg: rgba(255,255,255,.06);
+  --widget-header-bg: rgba(255,255,255,.08);
+  --widget-body-bg: rgba(0,0,0,.10);
+  --widget-footer-bg: rgba(255,255,255,.06);
+
+  --widget-user-bubble: linear-gradient(135deg, rgba(109,94,247,1), rgba(56,189,248,1));
+  --widget-user-text: rgba(255,255,255,.95);
+
+  --widget-bot-bubble: rgba(255,255,255,.08);
+  --widget-bot-text: rgba(255,255,255,.92);
+
+  --avatar-bg: rgba(255,255,255,.10);
+  --avatar-text: rgba(255,255,255,.78);
+
+  /* Buttons / inputs */
+  --input-bg: rgba(255,255,255,.06);
+  --input-border: var(--border-1);
+  --input-focus: rgba(56,189,248,.22);
+
+  /* Console */
+  --console-bg: rgba(0,0,0,.16);
+  --console-border: var(--border-2);
+  --console-ts: rgba(255,255,255,.42);
+  --console-line: rgba(255,255,255,.78);
+  --console-warn: #fbbf24;
+  --console-error: #fb7185;
+}
