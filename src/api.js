@@ -1,10 +1,15 @@
 // fastapi-chat-tester/src/api.js
 
+const TOKEN_KEY = "auth_token";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "/api";
+
 function mkMessageId() {
   return `m_${Math.random().toString(16).slice(2, 10)}`;
 }
 
-const TOKEN_KEY = "auth_token";
+function apiUrl(path) {
+  return `${API_BASE}${path.startsWith("/") ? "" : "/"}${path}`;
+}
 
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
@@ -30,7 +35,7 @@ export async function login(username, password) {
   body.set("username", username);
   body.set("password", password);
 
-  const r = await fetch("/api/auth/login", {
+  const r = await fetch(apiUrl("/auth/login"), {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: body.toString(),
@@ -45,7 +50,7 @@ export async function login(username, password) {
 }
 
 export async function createSession() {
-  const r = await fetch("/api/v1/chat/session", {
+  const r = await fetch(apiUrl("/v1/chat/session"), {
     method: "POST",
     headers: authHeaders({ "Content-Type": "application/json" }),
     body: JSON.stringify({
@@ -61,11 +66,11 @@ export async function createSession() {
 
 export async function deleteSession(sessionId) {
   const r = await fetch(
-    `/api/v1/chat/session/${encodeURIComponent(sessionId)}`,
+    apiUrl(`/v1/chat/session/${encodeURIComponent(sessionId)}`),
     {
       method: "DELETE",
       headers: authHeaders(),
-    }
+    },
   );
 
   const data = await r.json().catch(() => ({}));
@@ -76,7 +81,7 @@ export async function deleteSession(sessionId) {
 
 export async function sendMessage(sessionId, text) {
   const r = await fetch(
-    `/api/v1/chat/session/${encodeURIComponent(sessionId)}/message`,
+    apiUrl(`/v1/chat/session/${encodeURIComponent(sessionId)}/message`),
     {
       method: "POST",
       headers: authHeaders({ "Content-Type": "application/json" }),
@@ -84,7 +89,7 @@ export async function sendMessage(sessionId, text) {
         content: text,
         metadata: { client_message_id: mkMessageId() },
       }),
-    }
+    },
   );
 
   const data = await r.json().catch(() => ({}));
@@ -95,7 +100,7 @@ export async function sendMessage(sessionId, text) {
 
 export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
   const r = await fetch(
-    `/api/v1/chat/session/${encodeURIComponent(sessionId)}/message:stream`,
+    apiUrl(`/v1/chat/session/${encodeURIComponent(sessionId)}/message:stream`),
     {
       method: "POST",
       headers: authHeaders({ "Content-Type": "application/json" }),
@@ -103,7 +108,7 @@ export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
         content: text,
         metadata: { client_message_id: mkMessageId() },
       }),
-    }
+    },
   );
 
   if (!r.ok) {
@@ -126,10 +131,10 @@ export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
 
 export async function sendFeedback(
   sessionId,
-  { feedback, message_id, reason, metadata } = {}
+  { feedback, message_id, reason, metadata } = {},
 ) {
   const r = await fetch(
-    `/api/v1/chat/session/${encodeURIComponent(sessionId)}/feedback`,
+    apiUrl(`/v1/chat/session/${encodeURIComponent(sessionId)}/feedback`),
     {
       method: "POST",
       headers: authHeaders({ "Content-Type": "application/json" }),
@@ -139,7 +144,7 @@ export async function sendFeedback(
         reason: reason ?? null,
         metadata: metadata ?? null,
       }),
-    }
+    },
   );
 
   const data = await r.json().catch(() => ({}));
