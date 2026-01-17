@@ -24,107 +24,116 @@ export default function ChatPanel({
     return now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }, [hasSession, messages.length]);
 
-  const [revealMs, setRevealMs] = useState(180);  
-  
-async function onSend(textOverride, { replaceAssistantAt } = {}) {
-  const text = (textOverride ?? draft).trim();
-  if (!text) return;
+  const [revealMs, setRevealMs] = useState(180);
 
-  if (!sessionId) {
-    setStatus((prev) => ({
-      ...prev,
-      error: "No session. Start a session in the inspector first.",
-    }));
-    return;
-  }
+  const welcomeText = useMemo(() => {
+    return `Hi there. I’m ${botName}, ${brandName}’s virtual assistant. If you want to talk to a human agent at any time, type or tap “Talk to a human.”`;
+  }, [botName, brandName]);
 
-  if (replaceAssistantAt == null) {
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text, ts: new Date().toISOString() },
-    ]);
-    setDraft("");
-  }
+  // Always render through MessageList so the empty state matches the chat style
+  const displayMessages = useMemo(() => {
+    if (messages.length > 0) return messages;
+    return [{ role: "assistant", text: welcomeText, ts: new Date().toISOString() }];
+  }, [messages, welcomeText]);
 
-  // Create or replace assistant placeholder we will fill
-  setMessages((prev) => {
-    const next = prev.slice();
+  async function onSend(textOverride, { replaceAssistantAt } = {}) {
+    const text = (textOverride ?? draft).trim();
+    if (!text) return;
 
-    if (replaceAssistantAt != null) {
-      next[replaceAssistantAt] = {
-        ...next[replaceAssistantAt],
-        role: "assistant",
-        text: "",
-        ts: new Date().toISOString(),
-        messageId: null,
-        traceId: null,
-      };
-      return next;
+    if (!sessionId) {
+      setStatus((prev) => ({
+        ...prev,
+        error: "No session. Start a session in the inspector first.",
+      }));
+      return;
     }
 
-    next.push({ role: "assistant", text: "", ts: new Date().toISOString() });
-    return next;
-  });
+    if (replaceAssistantAt == null) {
+      setMessages((prev) => [
+        ...prev,
+        { role: "user", text, ts: new Date().toISOString() },
+      ]);
+      setDraft("");
+    }
 
-  try {
-    setStatus({ busy: true, error: null, traceId: null });
-
-    const result = await sendMessageStream(sessionId, text, {
-      onDelta: (_delta, full) => {
-        setMessages((prev) => {
-          const idx =
-            replaceAssistantAt != null
-              ? replaceAssistantAt
-              : (() => {
-                  for (let i = prev.length - 1; i >= 0; i--) {
-                    if (prev[i].role === "assistant") return i;
-                  }
-                  return -1;
-                })();
-
-          if (idx === -1) return prev;
-
-          const next = prev.slice();
-          next[idx] = { ...next[idx], text: full };
-          return next;
-        });
-      },
-    });
-
-    // Attach messageId/traceId to the correct assistant message
+    // Create or replace assistant placeholder we will fill
     setMessages((prev) => {
-      const idx =
-        replaceAssistantAt != null
-          ? replaceAssistantAt
-          : (() => {
-              for (let i = prev.length - 1; i >= 0; i--) {
-                if (prev[i].role === "assistant") return i;
-              }
-              return -1;
-            })();
-
-      if (idx === -1) return prev;
-
       const next = prev.slice();
-      next[idx] = {
-        ...next[idx],
-        text: result?.text ?? next[idx].text,
-        messageId: result?.messageId ?? null,
-        traceId: result?.traceId ?? null,
-      };
+
+      if (replaceAssistantAt != null) {
+        next[replaceAssistantAt] = {
+          ...next[replaceAssistantAt],
+          role: "assistant",
+          text: "",
+          ts: new Date().toISOString(),
+          messageId: null,
+          traceId: null,
+        };
+        return next;
+      }
+
+      next.push({ role: "assistant", text: "", ts: new Date().toISOString() });
       return next;
     });
 
-    setStatus({ busy: false, error: null, traceId: null });
-  } catch (e) {
-    setStatus({
-      busy: false,
-      error: e?.message || "send failed",
-      traceId: null,
-    });
-  }
-}
+    try {
+      setStatus({ busy: true, error: null, traceId: null });
 
+      const result = await sendMessageStream(sessionId, text, {
+        onDelta: (_delta, full) => {
+          setMessages((prev) => {
+            const idx =
+              replaceAssistantAt != null
+                ? replaceAssistantAt
+                : (() => {
+                    for (let i = prev.length - 1; i >= 0; i--) {
+                      if (prev[i].role === "assistant") return i;
+                    }
+                    return -1;
+                  })();
+
+            if (idx === -1) return prev;
+
+            const next = prev.slice();
+            next[idx] = { ...next[idx], text: full };
+            return next;
+          });
+        },
+      });
+
+      // Attach messageId/traceId to the correct assistant message
+      setMessages((prev) => {
+        const idx =
+          replaceAssistantAt != null
+            ? replaceAssistantAt
+            : (() => {
+                for (let i = prev.length - 1; i >= 0; i--) {
+                  if (prev[i].role === "assistant") return i;
+                }
+                return -1;
+              })();
+
+        if (idx === -1) return prev;
+
+        const next = prev.slice();
+        next[idx] = {
+          ...next[idx],
+          text: result?.text ?? next[idx].text,
+          messageId: result?.messageId ?? null,
+          traceId: result?.traceId ?? null,
+        };
+        return next;
+      });
+
+      setStatus({ busy: false, error: null, traceId: null });
+    } catch (e) {
+      setStatus({
+        busy: false,
+        error: e?.message || "send failed",
+        traceId: null,
+      });
+    }
+  }
 
   async function onFeedback({ feedback, messageId }) {
     if (!sessionId) return;
@@ -159,19 +168,20 @@ async function onSend(textOverride, { replaceAssistantAt } = {}) {
     }
   }
 
-function onRegenerateAssistant(atIndex) {
-  // Find the closest user message before this assistant
-  let userText = null;
-  for (let i = atIndex - 1; i >= 0; i--) {
-    if (messages[i].role === "user") {
-      userText = messages[i].text;
-      break;
+  function onRegenerateAssistant(atIndex) {
+    // Find the closest user message before this assistant
+    let userText = null;
+    for (let i = atIndex - 1; i >= 0; i--) {
+      if (messages[i].role === "user") {
+        userText = messages[i].text;
+        break;
+      }
     }
+    if (!userText) return;
+    setMessages((prev) => prev.slice(0, atIndex + 1));
+    onSend(userText, { replaceAssistantAt: atIndex });
   }
-  if (!userText) return;
-  setMessages((prev) => prev.slice(0, atIndex + 1));
-  onSend(userText, { replaceAssistantAt: atIndex });
-}
+
   return (
     <div className="widget">
       <div className="widget-header">
@@ -195,32 +205,29 @@ function onRegenerateAssistant(atIndex) {
           </div>
         ) : null}
 
-        {messages.length === 0 ? (
-          <div className="msg-row">
-            <div className="avatar">S</div>
-            <div className="bubble bot">
-              <div className="msg-meta">{botName}</div>
-              Hi there. I’m {botName}, {brandName}’s virtual assistant. If you want
-              to talk to an agent at any time, type or tap{" "}
-              <strong>“Talk to a human.”</strong>
-            </div>
-          </div>
-        ) : null}
+        <MessageList
+          messages={displayMessages}
+          botName={botName}
+          onFeedback={onFeedback}
+          feedback={feedbackById}
+          revealMs={revealMs}
+          onRegenerate={onRegenerateAssistant}
+        />
 
         {hasSession && messages.length === 0 ? (
-          <div className="quick-actions">
+          <div className="cw-row cw-right" style={{ marginTop: 10 }}>
             <button
-              className="quick-chip"
+              type="button"
+              className="cw-bubble cw-user"
+              style={{ border: 0, cursor: "pointer" }}
               onClick={() => onSend("Talk to a human")}
               disabled={status.busy}
+              aria-label="Quick action: Talk to a human"
             >
               Talk to a human
             </button>
           </div>
         ) : null}
-
-        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById} revealMs={revealMs} onRegenerate={onRegenerateAssistant}/>
-
 
         <div className="small-muted mt-2">{status.busy ? "Sending..." : ""}</div>
 
@@ -232,7 +239,6 @@ function onRegenerateAssistant(atIndex) {
         ) : null}
       </div>
 
-
       <div className="widget-footer">
         <MessageInput
           value={draft}
@@ -241,11 +247,19 @@ function onRegenerateAssistant(atIndex) {
           disabled={status.busy || !hasSession}
         />
         <div className="small-muted mt-2">Ctrl+Enter to send.</div>
+
         <div className="revealCtl">
-        <label className="small-muted">Reveal</label>
-        <input type="range" min="80" max="420" step="20" value={revealMs} onChange={(e)=>setRevealMs(Number(e.target.value))} />
-        <span className="small-muted">{revealMs}ms</span>
-      </div>
+          <label className="small-muted">Reveal</label>
+          <input
+            type="range"
+            min="80"
+            max="420"
+            step="20"
+            value={revealMs}
+            onChange={(e) => setRevealMs(Number(e.target.value))}
+          />
+          <span className="small-muted">{revealMs}ms</span>
+        </div>
       </div>
     </div>
   );
