@@ -54,82 +54,47 @@ function CopyBtn({ text }) {
   );
 }
 
-function AssistantBubble({
-  m,
-  botName,
-  canFeedback,
-  chosen,
-  onFeedback,
-}) {
-  // Animate chunks when text changes
+function AssistantBubble({ m, botName }) {
   const chunks = useMemo(() => splitIntoChunks(m.text), [m.text]);
   const [visibleN, setVisibleN] = useState(0);
 
   useEffect(() => {
-    // reset + animate
-    if (!chunks.length) {
-      setVisibleN(0);
-      return;
-    }
-
+    if (!chunks.length) { setVisibleN(0); return; }
     setVisibleN(0);
     let i = 0;
     const id = setInterval(() => {
       i += 1;
       setVisibleN((prev) => (prev < chunks.length ? prev + 1 : prev));
       if (i >= chunks.length) clearInterval(id);
-    }, 180); // speed; tune 140–240
-
+    }, 180);
     return () => clearInterval(id);
   }, [chunks.length]);
 
   return (
     <div className="cw-bubble cw-bot">
       <div className="cw-meta">{botName}</div>
-
       <div className="cw-content">
         {chunks.slice(0, visibleN).map((c, idx) => (
           <div key={idx} className="cw-chunk">
-            <ReactMarkdown
-              components={{
-                p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
-                ol: ({ children }) => <ol style={{ margin: "0 0 0 18px" }}>{children}</ol>,
-                li: ({ children }) => <li style={{ margin: "2px 0" }}>{children}</li>,
-              }}
-            >
+            <ReactMarkdown components={{ p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>, ol: ({ children }) => <ol style={{ margin: "0 0 0 18px" }}>{children}</ol>, li: ({ children }) => <li style={{ margin: "2px 0" }}>{children}</li> }}>
               {c}
             </ReactMarkdown>
           </div>
         ))}
       </div>
-
-      <div className="cw-actions">
-        <CopyBtn text={m.text} />
-
-        <button
-          className={`cw-iconbtn ${chosen === "thumbs_up" ? "is-on" : ""}`}
-          disabled={!canFeedback || !!chosen}
-          onClick={() => onFeedback?.({ feedback: "thumbs_up", messageId: m.messageId })}
-          title={canFeedback ? "Thumbs up" : "Missing message id"}
-          type="button"
-        >
-          👍
-        </button>
-
-        <button
-          className={`cw-iconbtn ${chosen === "thumbs_down" ? "is-on" : ""}`}
-          disabled={!canFeedback || !!chosen}
-          onClick={() => onFeedback?.({ feedback: "thumbs_down", messageId: m.messageId })}
-          title={canFeedback ? "Thumbs down" : "Missing message id"}
-          type="button"
-        >
-          👎
-        </button>
-      </div>
     </div>
   );
 }
 
+function MessageActions({ text, canFeedback, chosen, onFeedback, messageId }) {
+  return (
+    <div className="cw-actions-out">
+      <CopyBtn text={text} />
+      <button className={`cw-iconbtn ${chosen === "thumbs_up" ? "is-on" : ""}`} disabled={!canFeedback || !!chosen} onClick={() => onFeedback?.({ feedback: "thumbs_up", messageId })} title={canFeedback ? "Thumbs up" : "Missing message id"} type="button">👍</button>
+      <button className={`cw-iconbtn ${chosen === "thumbs_down" ? "is-on" : ""}`} disabled={!canFeedback || !!chosen} onClick={() => onFeedback?.({ feedback: "thumbs_down", messageId })} title={canFeedback ? "Thumbs down" : "Missing message id"} type="button">👎</button>
+    </div>
+  );
+}
 export default function MessageList({ messages, botName="Assistant", onFeedback, feedback={}, revealMs=180 }) {
 
   const endRef = useRef(null);
@@ -157,8 +122,11 @@ export default function MessageList({ messages, botName="Assistant", onFeedback,
         return (
           <div key={idx} className="cw-row">
             <div className="cw-avatar">S</div>
-            <AssistantBubble m={m} botName={botName} canFeedback={canFeedback} chosen={chosen} onFeedback={onFeedback} revealMs={revealMs} />
 
+            <div className="cw-stack">
+              <AssistantBubble m={m} botName={botName} />
+              <MessageActions text={m.text} canFeedback={canFeedback} chosen={chosen} onFeedback={onFeedback} messageId={m.messageId} />
+            </div>
           </div>
         );
       })}
