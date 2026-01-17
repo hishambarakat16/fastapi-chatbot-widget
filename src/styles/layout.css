@@ -1,0 +1,129 @@
+.app-shell {
+  max-width: 1200px;
+}
+
+.topbar {
+  background: rgba(255,255,255,0.65);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(10px);
+}
+
+.topbar-title {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.kbd-hint {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.8);
+  color: var(--muted);
+}
+
+/* ===== DevTools workspace that fills the screen under header ===== */
+
+.devtools-layout {
+  /* take (viewport height - header area) so both columns can stretch */
+  height: calc(100vh - 140px); /* tweak this if your header height changes */
+  min-height: 520px;
+  display: flex;
+  align-items: stretch; /* IMPORTANT: both columns same height */
+  gap: 14px; /* slightly tighter -> pulls inspector left */
+}
+
+/* Left: preview column fills height */
+.preview-col {
+  flex: 0 0 520px; /* widen if you want more empty space inside the widget */
+  display: flex;
+  align-items: stretch;
+}
+
+.preview-wrap {
+  width: 420px;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 100%;          /* IMPORTANT */
+  display: flex;         /* IMPORTANT */
+  align-items: stretch;  /* IMPORTANT */
+}
+
+/* Make the widget stretch full height (your left red box) */
+.preview-wrap .widget {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the chat body area scroll instead of leaving whitespace */
+.preview-wrap .widget-body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+/* Footer stays pinned at bottom */
+.preview-wrap .widget-footer {
+  flex: 0 0 auto;
+}
+
+/* Right: tooling column fills height */
+.tools-col {
+  flex: 0 0 420px; /* narrower than before to move it left */
+  display: flex;
+  align-items: stretch;
+}
+
+.tools-stack {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Inspector keeps natural height */
+.tools-top {
+  flex: 0 0 auto;
+}
+
+/* Console fills remaining space (your right red box) */
+.tools-bottom {
+  flex: 1 1 auto;
+  min-height: 0; /* IMPORTANT so overflow works */
+  display: flex;
+}
+
+/* Make console card fill the available space */
+.tools-bottom .card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* When inspector hidden, center preview */
+.devtools-layout.is-closed {
+  justify-content: center;
+}
+.devtools-layout.is-closed .preview-col {
+  flex-basis: auto;
+}
+
+/* Responsive stack */
+@media (max-width: 992px) {
+  .devtools-layout {
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .preview-col,
+  .tools-col {
+    flex: 1 1 auto;
+  }
+  .preview-wrap {
+    height: auto;
+  }
+}

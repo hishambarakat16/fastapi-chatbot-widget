@@ -1,0 +1,28 @@
+:root {
+  /* Core */
+  --bg: #f3f1ec;
+  --ink: #0f172a;
+  --muted: #6b7280;
+
+  /* Brand */
+  --brand: #8b3f7a;
+  --brand-2: #7a356b;
+
+  /* Surfaces */
+  --panel: rgba(255, 255, 255, 0.9);
+  --card: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+
+  /* Chat */
+  --bubble-bot: #f3f5f7;
+  --bubble-user: #f2d8ee;
+
+  /* Effects */
+  --shadow: 0 16px 60px rgba(2, 6, 23, 0.12);
+  --shadow-soft: 0 10px 30px rgba(2, 6, 23, 0.10);
+
+  /* Radius */
+  --r-lg: 18px;
+  --r-md: 14px;
+  --r-sm: 12px;
+}

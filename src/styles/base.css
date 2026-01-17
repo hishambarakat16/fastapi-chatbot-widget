@@ -1,0 +1,70 @@
+/* src/styles/base.css */
+
+/* Reset-ish (lightweight) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+
+  /* Typography baseline */
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  color: var(--ink);
+
+  /* Overall theme background */
+  background:
+    radial-gradient(900px 500px at 12% 12%, rgba(139, 63, 122, 0.14), transparent 60%),
+    radial-gradient(750px 420px at 88% 16%, rgba(47, 109, 246, 0.12), transparent 55%),
+    radial-gradient(900px 520px at 45% 110%, rgba(34, 197, 94, 0.10), transparent 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0)),
+    var(--bg);
+
+  background-attachment: fixed;
+}
+
+/* Links */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Selection */
+::selection {
+  background: rgba(47, 109, 246, 0.20);
+}
+
+/* Small helper */
+.small-muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Better focus without ugly outlines everywhere */
+:focus-visible {
+  outline: 2px solid rgba(47, 109, 246, 0.55);
+  outline-offset: 2px;
+}
+
+/* Make form controls inherit font nicely */
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}

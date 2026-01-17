@@ -1,0 +1,386 @@
+.widget {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 14px 38px rgba(16, 24, 40, 0.14);
+  border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+/* ===== Header (more premium) ===== */
+.widget-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 16px 14px;
+  border-bottom:1px solid rgba(0,0,0,.06);
+
+  /* subtle premium feel */
+  background:
+    radial-gradient(1200px 120px at 20% 0%, rgba(59,130,246,.10), transparent 60%),
+    radial-gradient(900px 120px at 90% 0%, rgba(16,185,129,.10), transparent 55%),
+    rgba(255,255,255,.90);
+
+  backdrop-filter: blur(10px);
+}
+
+/* Title block */
+.widget-brand{
+  font-weight: 800;
+  font-size: 15.5px;
+  letter-spacing: -0.2px;
+  line-height: 1.15;
+  color: rgba(0,0,0,.88);
+}
+
+.widget-sub{
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: rgba(0,0,0,.55);
+}
+
+/* ===== Status pill (looks intentional) ===== */
+.status-pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 11px;
+  border-radius:999px;
+
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow:
+    0 1px 0 rgba(0,0,0,.04),
+    0 8px 24px rgba(0,0,0,.06);
+
+  color: rgba(0,0,0,.72);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-pill .dot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 0 0 3px rgba(0,0,0,.04) inset;
+}
+
+.status-pill .dot.on{
+  background: #22c55e;
+  box-shadow:
+    0 0 0 3px rgba(34,197,94,.18),
+    0 0 12px rgba(34,197,94,.35);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #cbd5e1;
+}
+.dot.on {
+  background: #22c55e;
+}
+
+.widget-body {
+  background: #fff;
+  padding: 14px;
+  min-height: 420px;
+}
+
+.thread {
+  height: 420px;
+  overflow: auto;
+  padding: 6px 4px 10px 4px;
+}
+
+.time-marker {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(16, 24, 40, 0.45);
+  margin: 4px 0 10px 0;
+}
+
+.msg-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: #e6f0f3;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 12px;
+  flex: 0 0 30px;
+}
+
+.bubble {
+  max-width: 78%;
+  border-radius: var(--r-lg);
+  padding: 10px 12px;
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.35;
+}
+
+.bubble.bot {
+  background: var(--bubble-bot);
+  color: #0b1220;
+  border-top-left-radius: 8px;
+}
+
+.bubble.user {
+  background: var(--bubble-user);
+  color: #1f2937;
+  border-top-right-radius: 8px;
+}
+
+.msg-meta {
+  font-size: 11px;
+  color: rgba(15, 23, 42, 0.55);
+  margin-bottom: 6px;
+}
+
+.msg-right {
+  justify-content: flex-end;
+}
+
+.widget-footer {
+  background: #fff;
+  border-top: 1px solid rgba(16, 24, 40, 0.06);
+  padding: 12px;
+}
+
+.input-pill {
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  border-radius: 999px;
+  padding: 8px 10px;
+  background: #fff;
+}
+
+.input-pill:focus-within {
+  box-shadow: 0 0 0 4px rgba(139, 63, 122, 0.12);
+  border-color: rgba(139, 63, 122, 0.35);
+}
+
+.chat-textarea {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  resize: none;
+  padding: 6px 8px !important;
+}
+
+.send-btn {
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 600;
+}
+
+.quick-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 8px 2px 12px 2px;
+}
+
+.quick-chip {
+  border-radius: 999px;
+  padding: 8px 12px;
+  border: 1px solid rgba(139, 63, 122, 0.25);
+  background: rgba(242, 216, 238, 0.55);
+  color: #4c1d95;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.quick-chip:hover {
+  background: rgba(242, 216, 238, 0.8);
+}
+
+/* Thread */
+.cw-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cw-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.cw-right {
+  justify-content: flex-end;
+}
+
+.cw-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(16, 24, 40, 0.06);
+  color: rgba(16, 24, 40, 0.7);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Bubbles */
+.cw-bubble {
+  max-width: 82%;
+  border-radius: 18px;
+  padding: 10px 12px;
+  line-height: 1.35;
+  font-size: 14px;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.04);
+}
+
+.cw-user {
+  background: #2f6df6;
+  color: #fff;
+  border-bottom-right-radius: 8px;
+}
+
+.cw-bot {
+  background: rgba(16, 24, 40, 0.04);
+  color: #101828;
+  border-bottom-left-radius: 8px;
+}
+
+/* Meta + content */
+.cw-meta {
+  font-size: 12px;
+  color: rgba(16, 24, 40, 0.55);
+  margin-bottom: 6px;
+}
+
+.cw-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Chunk fade-in */
+.cw-chunk {
+  animation: cwFadeUp 220ms ease-out both;
+}
+
+@keyframes cwFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Actions row */
+.cw-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cw-iconbtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cw-iconbtn:hover {
+  background: rgba(16, 24, 40, 0.03);
+}
+
+.cw-iconbtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cw-iconbtn.is-on {
+  border-color: rgba(47, 109, 246, 0.35);
+  background: rgba(47, 109, 246, 0.08);
+}
+
+.revealCtl { display:flex; align-items:center; gap:10px; margin-top:8px; }
+.revealCtl input { width: 140px; }
+
+/* bubble + actions stack */
+.cw-stack{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* actions under the bubble (not under the avatar) */
+.cw-actions-out{
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  margin-left: 12px; /* small indent so it visually sits under bubble content */
+}
+
+/* make buttons look like ChatGPT: no border, small, subtle hover */
+.cw-actionbtn{
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0,0,0,.55);
+}
+
+.cw-actionbtn:hover{
+  background: rgba(0,0,0,.06);
+  color: rgba(0,0,0,.8);
+}
+
+.cw-actionbtn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* kill the ugly focus ring/outline */
+.cw-actionbtn:focus,
+
+.cw-actionbtn:focus-visible{
+  outline: none;
+  box-shadow: none;
+}
+
+/* shrink svg icons */
+.cw-actionbtn svg{
+  width: 15px;
+  height: 15px;
+}
+/* selected state (sticks) */
+.cw-actionbtn.is-on{
+  background: rgba(0,0,0,.06);
+  color: rgba(0,0,0,.85);
+}
+
+/* once user picked, keep the selected button readable even though it's disabled */
+.cw-actions-out .cw-actionbtn.is-on:disabled{
+  opacity: 1;
+}
+
+/* and keep the non-selected one muted */
+.cw-actions-out .cw-actionbtn:disabled:not(.is-on){
+  opacity: .35;
+}
