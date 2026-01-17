@@ -1,3 +1,5 @@
+// fastapi-chat-tester/src/components/ChatPanel.jsx
+
 import React, { useMemo, useState } from "react";
 import { sendMessageStream, sendFeedback } from "../api.js";
 import MessageList from "./MessageList.jsx";
@@ -22,6 +24,8 @@ export default function ChatPanel({
     return now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }, [hasSession, messages.length]);
 
+  const [revealMs, setRevealMs] = useState(180);  
+  
   async function onSend(textOverride) {
     const text = (textOverride ?? draft).trim();
     if (!text) return;
@@ -35,11 +39,17 @@ export default function ChatPanel({
     }
 
     // Append user message
-    setMessages((prev) => [...prev, { role: "user", text, ts: new Date().toISOString() }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", text, ts: new Date().toISOString() },
+    ]);
     setDraft("");
 
-    // Append assistant placeholder we will stream into
-    setMessages((prev) => [...prev, { role: "assistant", text: "", ts: new Date().toISOString() }]);
+    // Append assistant placeholder we will fill once the response returns
+    setMessages((prev) => [
+      ...prev,
+      { role: "assistant", text: "", ts: new Date().toISOString() },
+    ]);
 
     try {
       setStatus({ busy: true, error: null, traceId: null });
@@ -93,7 +103,10 @@ export default function ChatPanel({
   async function onFeedback({ feedback, messageId }) {
     if (!sessionId) return;
     if (!messageId) {
-      setStatus((prev) => ({ ...prev, error: "Cannot send feedback: missing messageId" }));
+      setStatus((prev) => ({
+        ...prev,
+        error: "Cannot send feedback: missing messageId",
+      }));
       return;
     }
 
@@ -148,21 +161,27 @@ export default function ChatPanel({
             <div className="avatar">S</div>
             <div className="bubble bot">
               <div className="msg-meta">{botName}</div>
-              Hi there. I’m {botName}, {brandName}’s virtual assistant. If you want to talk to an agent at any time,
-              type or tap <strong>“Talk to a human.”</strong>
+              Hi there. I’m {botName}, {brandName}’s virtual assistant. If you want
+              to talk to an agent at any time, type or tap{" "}
+              <strong>“Talk to a human.”</strong>
             </div>
           </div>
         ) : null}
 
         {hasSession && messages.length === 0 ? (
           <div className="quick-actions">
-            <button className="quick-chip" onClick={() => onSend("Talk to a human")} disabled={status.busy}>
+            <button
+              className="quick-chip"
+              onClick={() => onSend("Talk to a human")}
+              disabled={status.busy}
+            >
               Talk to a human
             </button>
           </div>
         ) : null}
 
-        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById}/>
+        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById} revealMs={revealMs} />
+
 
         <div className="small-muted mt-2">{status.busy ? "Sending..." : ""}</div>
 
@@ -182,6 +201,11 @@ export default function ChatPanel({
           disabled={status.busy || !hasSession}
         />
         <div className="small-muted mt-2">Ctrl+Enter to send.</div>
+        <div className="revealCtl">
+        <label className="small-muted">Reveal</label>
+        <input type="range" min="80" max="420" step="20" value={revealMs} onChange={(e)=>setRevealMs(Number(e.target.value))} />
+        <span className="small-muted">{revealMs}ms</span>
+      </div>
       </div>
     </div>
   );

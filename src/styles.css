@@ -243,3 +243,189 @@ body {
   color: var(--muted);
   font-size: 12px;
 }
+
+
+/* ===== Chatwoot-ish widget styling (aesthetics only) ===== */
+
+.widget {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 14px 38px rgba(16, 24, 40, 0.14);
+  border: 1px solid rgba(16, 24, 40, 0.06);
+}
+
+.widget-header {
+  padding: 14px 14px;
+  border-bottom: 1px solid rgba(16, 24, 40, 0.06);
+  background: #fff;
+}
+
+.widget-brand {
+  font-weight: 650;
+  font-size: 14px;
+  color: #101828;
+}
+
+.widget-sub {
+  font-size: 12px;
+  color: rgba(16, 24, 40, 0.55);
+  margin-top: 2px;
+}
+
+.status-pill {
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background: #fff;
+}
+
+.widget-body {
+  background: #fff;
+  padding: 14px;
+  min-height: 420px;
+}
+
+.time-marker {
+  text-align: center;
+  font-size: 12px;
+  color: rgba(16, 24, 40, 0.45);
+  margin-bottom: 10px;
+}
+
+.widget-footer {
+  background: #fff;
+  border-top: 1px solid rgba(16, 24, 40, 0.06);
+  padding: 12px 12px;
+}
+
+/* Thread */
+.cw-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cw-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.cw-right {
+  justify-content: flex-end;
+}
+
+.cw-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  background: rgba(16, 24, 40, 0.06);
+  color: rgba(16, 24, 40, 0.7);
+  display: grid;
+  place-items: center;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+/* Bubbles */
+.cw-bubble {
+  max-width: 82%;
+  border-radius: 18px;
+  padding: 10px 12px;
+  line-height: 1.35;
+  font-size: 14px;
+  box-shadow: 0 1px 0 rgba(16, 24, 40, 0.04);
+}
+
+.cw-user {
+  background: #2f6df6;
+  color: #fff;
+  border-bottom-right-radius: 8px;
+}
+
+.cw-bot {
+  background: rgba(16, 24, 40, 0.04);
+  color: #101828;
+  border-bottom-left-radius: 8px;
+}
+
+/* Meta + content */
+.cw-meta {
+  font-size: 12px;
+  color: rgba(16, 24, 40, 0.55);
+  margin-bottom: 6px;
+}
+
+.cw-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Chunk fade-in */
+.cw-chunk {
+  animation: cwFadeUp 220ms ease-out both;
+}
+
+@keyframes cwFadeUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Actions row */
+.cw-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.cw-iconbtn {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.cw-iconbtn:hover {
+  background: rgba(16, 24, 40, 0.03);
+}
+
+.cw-iconbtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.cw-iconbtn.is-on {
+  border-color: rgba(47, 109, 246, 0.35);
+  background: rgba(47, 109, 246, 0.08);
+}
+
+/* Input pill: your MessageInput already uses input-pill/chat-textarea/send-btn.
+   If you want it closer to the reference widget: */
+.input-pill {
+  border-radius: 999px !important;
+  border: 1px solid rgba(16, 24, 40, 0.10);
+  background: #fff;
+  padding: 8px 10px;
+}
+
+.chat-textarea {
+  border: none !important;
+  box-shadow: none !important;
+  resize: none;
+  padding: 6px 8px !important;
+}
+
+.send-btn {
+  border-radius: 999px !important;
+}
+
+.revealCtl { display:flex; align-items:center; gap:10px; margin-top:8px; }
+.revealCtl input { width: 140px; }

@@ -1,3 +1,5 @@
+// fastapi-chat-tester/src/api.js
+
 function mkMessageId() {
   return `m_${Math.random().toString(16).slice(2, 10)}`;
 }
@@ -90,6 +92,7 @@ export async function sendMessage(sessionId, text) {
     throw new Error(data?.detail || data?.error || "send_message_failed");
   return data;
 }
+
 export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
   const r = await fetch(
     `/api/v1/chat/session/${encodeURIComponent(sessionId)}/message:stream`,
@@ -108,26 +111,14 @@ export async function sendMessageStream(sessionId, text, { onDelta } = {}) {
     throw new Error(data?.detail || data?.error || "stream_failed");
   }
 
-  // IMPORTANT: capture headers once (does not affect streaming)
   const messageId = r.headers.get("x-message-id");
   const traceId = r.headers.get("x-trace-id");
 
-  const reader = r.body.getReader();
-  const decoder = new TextDecoder("utf-8");
+  // Read full body (plain text)
+  const fullText = await r.text();
 
-  let fullText = "";
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-
-    const chunk = decoder.decode(value, { stream: true });
-
-    console.log("RAW CHUNK >>>", JSON.stringify(chunk));
-
-    fullText += chunk;
-    if (onDelta) onDelta(chunk, fullText);
-  }
+  // Keep the same callback contract (single update)
+  if (onDelta) onDelta(fullText, fullText);
 
   // Return text + ids so caller can attach to the assistant message
   return { text: fullText, messageId, traceId };
