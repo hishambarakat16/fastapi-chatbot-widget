@@ -79,10 +79,10 @@ export default function SessionPanel({
           <div className="small text-muted">Created At</div>
           <div className="font-monospace">{session?.created_at || "—"}</div>
         </div>
-
+{/* 
         <div className="small text-muted">
           Tip: “Hide inspector” makes it look like a real customer widget.
-        </div>
+        </div> */}
       </div>
     </div>
   );

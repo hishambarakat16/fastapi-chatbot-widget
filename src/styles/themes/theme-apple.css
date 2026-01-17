@@ -1,0 +1,185 @@
+/* Apple-ish (minimal, bright, airy, "paper" not glass) */
+:root[data-theme="apple"] {
+  /* Background: super subtle, almost flat */
+  --app-bg: #f5f5f7;
+  --app-bg-overlay:
+    radial-gradient(900px 500px at 20% 8%, rgba(10, 132, 255, .06), transparent 62%),
+    radial-gradient(700px 420px at 85% 18%, rgba(0, 0, 0, .035), transparent 60%);
+
+  /* Text */
+  --text-1: #0b0f1a;
+  --text-2: rgba(11, 15, 26, .70);
+  --text-3: rgba(11, 15, 26, .52);
+
+  /* Surfaces: reduce "glass" effect, more paper */
+  --surface-1: rgba(255,255,255,.92);
+  --surface-2: #ffffff;
+  --surface-3: rgba(11,15,26,.03);
+
+  /* Borders: hairline-ish */
+  --border-1: rgba(11, 15, 26, .10);
+  --border-2: rgba(11, 15, 26, .06);
+
+  /* Accents */
+  --primary: #0a84ff;          /* iOS blue */
+  --primary-contrast: #ffffff;
+  --success: #34c759;          /* iOS green */
+  --danger: #ff3b30;           /* iOS red */
+
+  /* Shadows: calmer, closer to macOS */
+  --shadow-1: 0 10px 30px rgba(11, 15, 26, .08);
+  --shadow-2: 0 18px 60px rgba(11, 15, 26, .10);
+
+  /* Header / topbar */
+  --topbar-bg: rgba(255,255,255,.88);
+  --topbar-blur: blur(14px);
+
+  /* Widget */
+  --widget-bg: #ffffff;
+  --widget-header-bg: rgba(255,255,255,.94);
+  --widget-body-bg: #ffffff;
+  --widget-footer-bg: rgba(255,255,255,.94);
+
+  --widget-user-bubble: #0a84ff;
+  --widget-user-text: #ffffff;
+
+  --widget-bot-bubble: rgba(11,15,26,.05);
+  --widget-bot-text: #0b0f1a;
+
+  --avatar-bg: rgba(11,15,26,.06);
+  --avatar-text: rgba(11,15,26,.70);
+
+  /* Inputs */
+  --input-bg: rgba(255,255,255,.92);
+  --input-border: rgba(11,15,26,.14);
+  --input-focus: rgba(10,132,255,.22);
+
+  /* Console */
+  --console-bg: rgba(11,15,26,.03);
+  --console-border: rgba(11,15,26,.10);
+  --console-ts: rgba(11,15,26,.44);
+  --console-line: rgba(11,15,26,.78);
+  --console-warn: #b45309;
+  --console-error: #b91c1c;
+
+  /* Apple-ish shape language (used by scoped overrides below) */
+  --apple-radius-xl: 18px;
+  --apple-radius-lg: 16px;
+  --apple-radius-md: 12px;
+  --apple-radius-sm: 10px;
+}
+
+/* ------------------------------------------------------------
+   Scoped component tweaks (this is what makes it feel NOT classic)
+   ------------------------------------------------------------ */
+
+:root[data-theme="apple"] .app-shell {
+  letter-spacing: -0.01em;
+}
+
+/* Topbar: more "macOS sheet" */
+:root[data-theme="apple"] .topbar {
+  border-radius: var(--apple-radius-xl);
+  border: 1px solid rgba(11,15,26,.08);
+  box-shadow: 0 10px 40px rgba(11,15,26,.08);
+}
+
+/* Cards: more paper, less glass */
+:root[data-theme="apple"] .card-glass {
+  background: rgba(255,255,255,.92) !important;
+  border: 1px solid rgba(11,15,26,.08) !important;
+  border-radius: var(--apple-radius-xl) !important;
+  box-shadow: var(--shadow-1) !important;
+}
+
+/* Inspector/Console spacing and title feel */
+:root[data-theme="apple"] .card-title {
+  letter-spacing: -0.02em;
+}
+
+/* Buttons: macOS-like */
+:root[data-theme="apple"] .btn {
+  border-radius: 12px !important;
+  border-color: rgba(11,15,26,.14) !important;
+}
+
+:root[data-theme="apple"] .btn.btn-primary {
+  border-color: rgba(10,132,255,.55) !important;
+  box-shadow: 0 10px 24px rgba(10,132,255,.18);
+}
+
+:root[data-theme="apple"] .btn.btn-outline-secondary,
+:root[data-theme="apple"] .btn.btn-outline-danger {
+  background: rgba(255,255,255,.84) !important;
+}
+
+:root[data-theme="apple"] .btn:focus,
+:root[data-theme="apple"] .btn:focus-visible {
+  outline: none !important;
+  box-shadow: 0 0 0 4px rgba(10,132,255,.22) !important;
+}
+
+/* Select / inputs: tighter + hairline */
+:root[data-theme="apple"] .form-select,
+:root[data-theme="apple"] .form-control {
+  border-radius: 12px !important;
+  border-color: rgba(11,15,26,.14) !important;
+  background: rgba(255,255,255,.92) !important;
+}
+
+:root[data-theme="apple"] .form-select:focus,
+:root[data-theme="apple"] .form-control:focus {
+  border-color: rgba(10,132,255,.65) !important;
+  box-shadow: 0 0 0 4px rgba(10,132,255,.18) !important;
+}
+
+/* Widget: make it feel like iMessage sheet */
+:root[data-theme="apple"] .widget {
+  border-radius: 22px !important;
+  border: 1px solid rgba(11,15,26,.08) !important;
+  box-shadow: 0 18px 60px rgba(11,15,26,.10) !important;
+  overflow: hidden;
+}
+
+:root[data-theme="apple"] .widget-header {
+  border-bottom: 1px solid rgba(11,15,26,.06);
+}
+
+:root[data-theme="apple"] .status-pill {
+  border: 1px solid rgba(11,15,26,.10);
+  background: rgba(255,255,255,.85);
+  border-radius: 999px;
+}
+
+/* Chat bubbles: slightly rounder and "iMessage" spacing */
+:root[data-theme="apple"] .cw-bubble {
+  border-radius: 18px !important;
+}
+
+:root[data-theme="apple"] .cw-bubble.cw-user {
+  border-radius: 18px 18px 8px 18px !important;
+  box-shadow: 0 10px 22px rgba(10,132,255,.14);
+}
+
+:root[data-theme="apple"] .cw-bubble.cw-bot {
+  border-radius: 18px 18px 18px 8px !important;
+}
+
+/* Input pill: more like iOS composer */
+:root[data-theme="apple"] .input-pill {
+  border-radius: 999px !important;
+  border: 1px solid rgba(11,15,26,.10) !important;
+  background: rgba(255,255,255,.92) !important;
+  box-shadow: 0 10px 26px rgba(11,15,26,.06);
+}
+
+:root[data-theme="apple"] .send-btn {
+  border-radius: 999px !important;
+}
+
+/* Console box: faint boundary, less heavy */
+:root[data-theme="apple"] .console-box {
+  border-radius: var(--apple-radius-lg) !important;
+  border: 1px solid rgba(11,15,26,.08) !important;
+  background: rgba(255,255,255,.70) !important;
+}

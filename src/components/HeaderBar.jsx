@@ -1,4 +1,5 @@
 import React from "react";
+import { THEMES } from "../theme.js";
 
 export default function HeaderBar({
   title,
@@ -24,16 +25,21 @@ export default function HeaderBar({
           <select
             className="form-select form-select-sm"
             aria-label="Theme"
-            style={{ width: 120 }}
+            style={{ width: 140 }}
             value={theme}
             onChange={(e) => onThemeChange(e.target.value)}
           >
-            <option value="classic">Classic</option>
-            <option value="lux">Lux</option>
+            {THEMES.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.label}
+              </option>
+            ))}
           </select>
 
           <button
-            className={`btn btn-sm ${showInspector ? "btn-outline-secondary" : "btn-secondary"}`}
+            className={`btn btn-sm ${
+              showInspector ? "btn-outline-secondary" : "btn-secondary"
+            }`}
             onClick={onToggleInspector}
             type="button"
           >
