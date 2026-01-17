@@ -68,57 +68,73 @@ body {
   backdrop-filter: blur(10px);
 }
 
-.widget{
-  height: 78vh;          /* tweak: 70–85vh */
-  max-height: 780px;     /* tweak: optional */
-  display: flex;
-  flex-direction: column;
-}
+/* ===== Header (more premium) ===== */
 .widget-header{
-  flex: 0 0 auto;
-}
-.widget-body{
-  flex: 1 1 auto;
-  overflow-y: auto;
-  min-height: 0;         /* IMPORTANT: allows flex child to scroll */
-  padding-bottom: 12px;  /* optional spacing above footer */
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 16px 14px;
+  border-bottom:1px solid rgba(0,0,0,.06);
+
+  /* subtle premium feel */
+  background:
+    radial-gradient(1200px 120px at 20% 0%, rgba(59,130,246,.10), transparent 60%),
+    radial-gradient(900px 120px at 90% 0%, rgba(16,185,129,.10), transparent 55%),
+    rgba(255,255,255,.90);
+
+  backdrop-filter: blur(10px);
 }
 
-/* Footer stays pinned */
-.widget-footer{
-  flex: 0 0 auto;
+/* Title block */
+.widget-brand{
+  font-weight: 800;
+  font-size: 15.5px;
+  letter-spacing: -0.2px;
+  line-height: 1.15;
+  color: rgba(0,0,0,.88);
 }
 
-.widget-header {
-  background: linear-gradient(180deg, var(--brand), var(--brand-2));
-  color: white;
-  padding: 14px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.widget-sub{
+  margin-top: 3px;
+  font-size: 12.5px;
+  line-height: 1.2;
+  color: rgba(0,0,0,.55);
 }
 
-.widget-brand {
+/* ===== Status pill (looks intentional) ===== */
+.status-pill{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 11px;
+  border-radius:999px;
+
+  background: rgba(255,255,255,.75);
+  border: 1px solid rgba(0,0,0,.08);
+  box-shadow:
+    0 1px 0 rgba(0,0,0,.04),
+    0 8px 24px rgba(0,0,0,.06);
+
+  color: rgba(0,0,0,.72);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -0.01em;
-  font-size: 18px;
 }
 
-.widget-sub {
-  font-size: 12px;
-  opacity: 0.85;
+.status-pill .dot{
+  width:10px;
+  height:10px;
+  border-radius:999px;
+  background: rgba(0,0,0,.18);
+  box-shadow: 0 0 0 3px rgba(0,0,0,.04) inset;
 }
 
-.status-pill {
-  font-size: 12px;
-  background: rgba(255,255,255,0.18);
-  border: 1px solid rgba(255,255,255,0.25);
-  padding: 6px 10px;
-  border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.status-pill .dot.on{
+  background: #22c55e;
+  box-shadow:
+    0 0 0 3px rgba(34,197,94,.18),
+    0 0 12px rgba(34,197,94,.35);
 }
+
 
 .dot {
   width: 8px;
@@ -517,4 +533,116 @@ body {
 /* and keep the non-selected one muted */
 .cw-actions-out .cw-actionbtn:disabled:not(.is-on){
   opacity: .35;
+}
+
+
+/* ===== DevTools workspace that fills the screen under header ===== */
+
+
+.devtools-layout {
+  /* take (viewport height - header area) so both columns can stretch */
+  height: calc(100vh - 140px); /* tweak this if your header height changes */
+  min-height: 520px;
+  display: flex;
+  align-items: stretch; /* IMPORTANT: both columns same height */
+  gap: 14px; /* slightly tighter -> pulls inspector left */
+}
+
+/* Left: preview column fills height */
+.preview-col {
+  flex: 0 0 520px; /* widen if you want more empty space inside the widget */
+  display: flex;
+  align-items: stretch;
+}
+
+.preview-wrap {
+  width: 420px;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 100%;          /* IMPORTANT */
+  display: flex;         /* IMPORTANT */
+  align-items: stretch;  /* IMPORTANT */
+}
+
+/* Make the widget stretch full height (your left red box) */
+.preview-wrap .widget {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Make the chat body area scroll instead of leaving whitespace */
+.preview-wrap .widget-body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+/* Footer stays pinned at bottom */
+.preview-wrap .widget-footer {
+  flex: 0 0 auto;
+}
+
+/* Right: tooling column fills height */
+.tools-col {
+  flex: 0 0 420px; /* narrower than before to move it left */
+  display: flex;
+  align-items: stretch;
+}
+
+.tools-stack {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Inspector keeps natural height */
+.tools-top {
+  flex: 0 0 auto;
+}
+
+/* Console fills remaining space (your right red box) */
+.tools-bottom {
+  flex: 1 1 auto;
+  min-height: 0; /* IMPORTANT so overflow works */
+  display: flex;
+}
+
+/* Make console card fill the available space */
+.tools-bottom .card {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* If your ConsolePanel uses .console-box, let it expand */
+.tools-bottom .console-box {
+  height: auto;      /* override fixed height */
+  flex: 1 1 auto;
+  min-height: 0;     /* IMPORTANT */
+}
+
+/* When inspector hidden, center preview */
+.devtools-layout.is-closed {
+  justify-content: center;
+}
+.devtools-layout.is-closed .preview-col {
+  flex-basis: auto;
+}
+
+/* Responsive stack */
+@media (max-width: 992px) {
+  .devtools-layout {
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+  }
+  .preview-col,
+  .tools-col {
+    flex: 1 1 auto;
+  }
+  .preview-wrap {
+    height: auto;
+  }
 }

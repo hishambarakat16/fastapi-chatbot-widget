@@ -1,6 +1,9 @@
+// src/App.jsx
+
 import React, { useMemo, useState } from "react";
 import HeaderBar from "./components/HeaderBar.jsx";
 import SessionPanel from "./components/SessionPanel.jsx";
+import ConsolePanel from "./components/ConsolePanel.jsx";
 import ChatPanel from "./components/ChatPanel.jsx";
 import LoginPage from "./components/LoginPage.jsx";
 import { clearToken, getToken } from "./api.js";
@@ -27,7 +30,7 @@ export default function App() {
       setMessages,
       setStatus,
     }),
-    [session, sessionId, messages, status, showInspector]
+    [session, sessionId, messages, status, showInspector],
   );
 
   function logout() {
@@ -40,24 +43,14 @@ export default function App() {
 
   return (
     <div className="container py-4 app-shell">
-      <div className="d-flex align-items-start justify-content-between gap-3">
-        <div className="flex-grow-1">
-          <HeaderBar
-            title="FastAPI Chat Tester"
-            hint="Dev proxy: /api → http://localhost:8000"
-            showInspector={showInspector}
-            onToggleInspector={() => setShowInspector((v) => !v)}
-          />
-        </div>
-
-        {authed ? (
-          <div className="pt-3">
-            <button className="btn btn-sm btn-outline-danger" onClick={logout}>
-              Logout
-            </button>
-          </div>
-        ) : null}
-      </div>
+      <HeaderBar
+        title="FastAPI Chat Tester"
+        // hint="Dev proxy: /api → http://localhost:8000"
+        showInspector={showInspector}
+        onToggleInspector={() => setShowInspector((v) => !v)}
+        authed={authed}
+        onLogout={logout}
+      />
 
       {!authed ? (
         <LoginPage brandName="FastAPI Chat Tester" onLoggedIn={() => setAuthed(true)} />
@@ -66,14 +59,18 @@ export default function App() {
           <div className={`col-12 ${showInspector ? "col-lg-7" : "col-lg-12"}`}>
             <div className="d-flex justify-content-center">
               <div style={{ width: 420, maxWidth: "100%" }}>
-                <ChatPanel {...ctx} brandName="Ridgewood Auto" botName="Speedy" />
+                <ChatPanel {...ctx} brandName="Fintech Company" botName="Speedy" />
               </div>
             </div>
           </div>
 
+          {/* RIGHT: inspector + console stacked (only when inspector is shown) */}
           {showInspector ? (
             <div className="col-12 col-lg-5">
-              <SessionPanel {...ctx} />
+              <div className="d-grid gap-3">
+                <SessionPanel {...ctx} />
+                <ConsolePanel />
+              </div>
             </div>
           ) : null}
         </div>

@@ -176,13 +176,13 @@ function onRegenerateAssistant(atIndex) {
     <div className="widget">
       <div className="widget-header">
         <div>
-          <div className="widget-brand">{brandName}</div>
-          <div className="widget-sub">{botName} · Virtual assistant</div>
+          <div className="widget-brand">Support</div>
+          <div className="widget-sub">{brandName}</div>
         </div>
 
         <div className="status-pill">
           <span className={`dot ${hasSession ? "on" : ""}`} />
-          <span>{hasSession ? "Online" : "No session"}</span>
+          <span>{hasSession ? "Online" : "Offline"}</span>
         </div>
       </div>
 
