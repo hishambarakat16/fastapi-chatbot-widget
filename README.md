@@ -1,7 +1,3 @@
-Here’s a **clean, public-repo-ready `README.md`**, rewritten from your explanation but tightened, technical, and honest (no fluff, no marketing cringe). You can paste this directly.
-
----
-
 # FastAPI Chatbot Widget
 
 A lightweight **frontend testing widget** for FastAPI chatbot backends.
@@ -224,19 +220,3 @@ You can:
 
 That’s it.
 
----
-
-## License
-
-MIT — use it, fork it, adapt it.
-
----
-
-If you want, next we can:
-
-- Add a **backend example (FastAPI stub)**
-- Add **OpenAPI snippets**
-- Add a **Langfuse example**
-- Clean up README diagrams
-
-Just say which one.
