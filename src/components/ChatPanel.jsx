@@ -161,12 +161,16 @@ async function onSend(textOverride, { replaceAssistantAt } = {}) {
 
 function onRegenerateAssistant(atIndex) {
   // Find the closest user message before this assistant
+  let userText = null;
   for (let i = atIndex - 1; i >= 0; i--) {
     if (messages[i].role === "user") {
-      onSend(messages[i].text, { replaceAssistantAt: atIndex });
-      return;
+      userText = messages[i].text;
+      break;
     }
   }
+  if (!userText) return;
+  setMessages((prev) => prev.slice(0, atIndex + 1));
+  onSend(userText, { replaceAssistantAt: atIndex });
 }
   return (
     <div className="widget">
