@@ -16,6 +16,7 @@ export default function ChatPanel({
 }) {
   const [draft, setDraft] = useState("");
   const [feedbackById, setFeedbackById] = useState({}); // { [messageId]: "thumbs_up" | "thumbs_down" }
+  const [revealMs, setRevealMs] = useState(180);
 
   const hasSession = !!sessionId;
 
@@ -23,8 +24,6 @@ export default function ChatPanel({
     const now = new Date();
     return now.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
   }, [hasSession, messages.length]);
-
-  const [revealMs, setRevealMs] = useState(180);
 
   const welcomeText = useMemo(() => {
     return `Hi there. I’m ${botName}, ${brandName}’s virtual assistant. If you want to talk to a human agent at any time, type or tap “Talk to a human.”`;
@@ -214,6 +213,7 @@ export default function ChatPanel({
           onRegenerate={onRegenerateAssistant}
         />
 
+        {/* Quick action should match the user-bubble look */}
         {hasSession && messages.length === 0 ? (
           <div className="cw-row cw-right" style={{ marginTop: 10 }}>
             <button
@@ -228,8 +228,6 @@ export default function ChatPanel({
             </button>
           </div>
         ) : null}
-
-        <div className="small-muted mt-2">{status.busy ? "Sending..." : ""}</div>
 
         {status.error ? (
           <div className="alert alert-danger mt-2 mb-0" role="alert">
