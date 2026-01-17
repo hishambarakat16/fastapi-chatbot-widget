@@ -1,5 +1,6 @@
 // fastapi-chat-tester/src/components/MessageList.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import MessageActions from "./MessageActions.jsx";
 import ReactMarkdown from "react-markdown";
 
 function normalizeText(s) {
@@ -28,31 +29,6 @@ function splitIntoChunks(text) {
   return chunks.filter(Boolean);
 }
 
-function CopyBtn({ text }) {
-  const [copied, setCopied] = useState(false);
-
-  async function onCopy() {
-    try {
-      await navigator.clipboard.writeText(text || "");
-      setCopied(true);
-      setTimeout(() => setCopied(false), 900);
-    } catch {
-      // ignore (no UI changes to your error system)
-    }
-  }
-
-  return (
-    <button
-      className="cw-iconbtn"
-      type="button"
-      onClick={onCopy}
-      title={copied ? "Copied" : "Copy"}
-      aria-label="Copy message"
-    >
-      {copied ? "✓" : "⧉"}
-    </button>
-  );
-}
 
 function AssistantBubble({ m, botName }) {
   const chunks = useMemo(() => splitIntoChunks(m.text), [m.text]);
@@ -86,15 +62,7 @@ function AssistantBubble({ m, botName }) {
   );
 }
 
-function MessageActions({ text, canFeedback, chosen, onFeedback, messageId }) {
-  return (
-    <div className="cw-actions-out">
-      <CopyBtn text={text} />
-      <button className={`cw-iconbtn ${chosen === "thumbs_up" ? "is-on" : ""}`} disabled={!canFeedback || !!chosen} onClick={() => onFeedback?.({ feedback: "thumbs_up", messageId })} title={canFeedback ? "Thumbs up" : "Missing message id"} type="button">👍</button>
-      <button className={`cw-iconbtn ${chosen === "thumbs_down" ? "is-on" : ""}`} disabled={!canFeedback || !!chosen} onClick={() => onFeedback?.({ feedback: "thumbs_down", messageId })} title={canFeedback ? "Thumbs down" : "Missing message id"} type="button">👎</button>
-    </div>
-  );
-}
+
 export default function MessageList({ messages, botName="Assistant", onFeedback, feedback={}, revealMs=180 }) {
 
   const endRef = useRef(null);

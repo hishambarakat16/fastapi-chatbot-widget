@@ -444,15 +444,77 @@ body {
 .revealCtl input { width: 140px; }
 
 
-.cw-stack { display: flex; flex-direction: column; min-width: 0; }
-.cw-actions-out { display:flex; gap:10px; margin-top:6px; align-items:center; opacity:0; transform:translateY(-2px); transition:opacity .12s ease, transform .12s ease; }
-.cw-row:hover .cw-actions-out { opacity:1; transform:translateY(0); }
+/* ensure avatar + bubble align at the top */
+.cw-row{
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
 
-.cw-iconbtn { width:26px; height:26px; border:0; background:transparent; padding:0; display:inline-flex; align-items:center; justify-content:center; border-radius:8px; color:rgba(0,0,0,.55); }
-.cw-iconbtn:hover { background:rgba(0,0,0,.06); color:rgba(0,0,0,.80); }
-.cw-iconbtn:active { background:rgba(0,0,0,.10); }
+/* bubble + actions stack */
+.cw-stack{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-.cw-iconbtn.is-on { color:rgba(0,0,0,.95); background:rgba(0,0,0,.06); }
-.cw-iconbtn[disabled] { opacity:.35; cursor:not-allowed; }
+/* actions under the bubble (not under the avatar) */
+.cw-actions-out{
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  margin-left: 12px; /* small indent so it visually sits under bubble content */
+}
 
-.cw-actions-out svg { width:16px; height:16px; }
+/* make buttons look like ChatGPT: no border, small, subtle hover */
+.cw-actionbtn{
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+  border-radius: 8px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0,0,0,.55);
+}
+
+.cw-actionbtn:hover{
+  background: rgba(0,0,0,.06);
+  color: rgba(0,0,0,.8);
+}
+
+.cw-actionbtn:disabled{
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+/* kill the ugly focus ring/outline */
+.cw-actionbtn:focus,
+
+.cw-actionbtn:focus-visible{
+  outline: none;
+  box-shadow: none;
+}
+
+/* shrink svg icons */
+.cw-actionbtn svg{
+  width: 15px;
+  height: 15px;
+}
+/* selected state (sticks) */
+.cw-actionbtn.is-on{
+  background: rgba(0,0,0,.06);
+  color: rgba(0,0,0,.85);
+}
+
+/* once user picked, keep the selected button readable even though it's disabled */
+.cw-actions-out .cw-actionbtn.is-on:disabled{
+  opacity: 1;
+}
+
+/* and keep the non-selected one muted */
+.cw-actions-out .cw-actionbtn:disabled:not(.is-on){
+  opacity: .35;
+}
