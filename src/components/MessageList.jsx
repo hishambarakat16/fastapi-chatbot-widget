@@ -63,7 +63,7 @@ function AssistantBubble({ m, botName }) {
 }
 
 
-export default function MessageList({ messages, botName="Assistant", onFeedback, feedback={}, revealMs=180 }) {
+export default function MessageList({ messages, botName="Assistant", onFeedback, feedback={}, revealMs=180 , onRegenerate}) {
 
   const endRef = useRef(null);
 
@@ -93,7 +93,14 @@ export default function MessageList({ messages, botName="Assistant", onFeedback,
 
             <div className="cw-stack">
               <AssistantBubble m={m} botName={botName} />
-              <MessageActions text={m.text} canFeedback={canFeedback} chosen={chosen} onFeedback={onFeedback} messageId={m.messageId} />
+             <MessageActions
+              text={m.text}
+              canFeedback={canFeedback}
+              chosen={chosen}
+              onFeedback={onFeedback}
+              messageId={m.messageId}
+              onRegenerate={() => onRegenerate(idx)}
+            />
             </div>
           </div>
         );

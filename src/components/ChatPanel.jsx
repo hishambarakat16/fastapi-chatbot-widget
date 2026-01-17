@@ -26,79 +26,105 @@ export default function ChatPanel({
 
   const [revealMs, setRevealMs] = useState(180);  
   
-  async function onSend(textOverride) {
-    const text = (textOverride ?? draft).trim();
-    if (!text) return;
+async function onSend(textOverride, { replaceAssistantAt } = {}) {
+  const text = (textOverride ?? draft).trim();
+  if (!text) return;
 
-    if (!sessionId) {
-      setStatus((prev) => ({
-        ...prev,
-        error: "No session. Start a session in the inspector first.",
-      }));
-      return;
-    }
+  if (!sessionId) {
+    setStatus((prev) => ({
+      ...prev,
+      error: "No session. Start a session in the inspector first.",
+    }));
+    return;
+  }
 
-    // Append user message
+  if (replaceAssistantAt == null) {
     setMessages((prev) => [
       ...prev,
       { role: "user", text, ts: new Date().toISOString() },
     ]);
     setDraft("");
-
-    // Append assistant placeholder we will fill once the response returns
-    setMessages((prev) => [
-      ...prev,
-      { role: "assistant", text: "", ts: new Date().toISOString() },
-    ]);
-
-    try {
-      setStatus({ busy: true, error: null, traceId: null });
-
-      const result = await sendMessageStream(sessionId, text, {
-        onDelta: (_delta, full) => {
-          setMessages((prev) => {
-            let idx = -1;
-            for (let i = prev.length - 1; i >= 0; i--) {
-              if (prev[i].role === "assistant") {
-                idx = i;
-                break;
-              }
-            }
-            if (idx === -1) return prev;
-
-            const next = prev.slice();
-            next[idx] = { ...next[idx], text: full };
-            return next;
-          });
-        },
-      });
-
-      // Attach messageId/traceId to the latest assistant message
-      setMessages((prev) => {
-        let idx = -1;
-        for (let i = prev.length - 1; i >= 0; i--) {
-          if (prev[i].role === "assistant") {
-            idx = i;
-            break;
-          }
-        }
-        if (idx === -1) return prev;
-
-        const next = prev.slice();
-        next[idx] = {
-          ...next[idx],
-          text: result?.text ?? next[idx].text,
-          messageId: result?.messageId ?? null,
-          traceId: result?.traceId ?? null,
-        };
-        return next;
-      });
-
-      setStatus({ busy: false, error: null, traceId: null });
-    } catch (e) {
-      setStatus({ busy: false, error: e?.message || "send failed", traceId: null });
-    }
   }
+
+  // Create or replace assistant placeholder we will fill
+  setMessages((prev) => {
+    const next = prev.slice();
+
+    if (replaceAssistantAt != null) {
+      next[replaceAssistantAt] = {
+        ...next[replaceAssistantAt],
+        role: "assistant",
+        text: "",
+        ts: new Date().toISOString(),
+        messageId: null,
+        traceId: null,
+      };
+      return next;
+    }
+
+    next.push({ role: "assistant", text: "", ts: new Date().toISOString() });
+    return next;
+  });
+
+  try {
+    setStatus({ busy: true, error: null, traceId: null });
+
+    const result = await sendMessageStream(sessionId, text, {
+      onDelta: (_delta, full) => {
+        setMessages((prev) => {
+          const idx =
+            replaceAssistantAt != null
+              ? replaceAssistantAt
+              : (() => {
+                  for (let i = prev.length - 1; i >= 0; i--) {
+                    if (prev[i].role === "assistant") return i;
+                  }
+                  return -1;
+                })();
+
+          if (idx === -1) return prev;
+
+          const next = prev.slice();
+          next[idx] = { ...next[idx], text: full };
+          return next;
+        });
+      },
+    });
+
+    // Attach messageId/traceId to the correct assistant message
+    setMessages((prev) => {
+      const idx =
+        replaceAssistantAt != null
+          ? replaceAssistantAt
+          : (() => {
+              for (let i = prev.length - 1; i >= 0; i--) {
+                if (prev[i].role === "assistant") return i;
+              }
+              return -1;
+            })();
+
+      if (idx === -1) return prev;
+
+      const next = prev.slice();
+      next[idx] = {
+        ...next[idx],
+        text: result?.text ?? next[idx].text,
+        messageId: result?.messageId ?? null,
+        traceId: result?.traceId ?? null,
+      };
+      return next;
+    });
+
+    setStatus({ busy: false, error: null, traceId: null });
+  } catch (e) {
+    setStatus({
+      busy: false,
+      error: e?.message || "send failed",
+      traceId: null,
+    });
+  }
+}
+
 
   async function onFeedback({ feedback, messageId }) {
     if (!sessionId) return;
@@ -133,6 +159,15 @@ export default function ChatPanel({
     }
   }
 
+function onRegenerateAssistant(atIndex) {
+  // Find the closest user message before this assistant
+  for (let i = atIndex - 1; i >= 0; i--) {
+    if (messages[i].role === "user") {
+      onSend(messages[i].text, { replaceAssistantAt: atIndex });
+      return;
+    }
+  }
+}
   return (
     <div className="widget">
       <div className="widget-header">
@@ -180,7 +215,7 @@ export default function ChatPanel({
           </div>
         ) : null}
 
-        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById} revealMs={revealMs} />
+        <MessageList messages={messages} botName={botName} onFeedback={onFeedback} feedback={feedbackById} revealMs={revealMs} onRegenerate={onRegenerateAssistant}/>
 
 
         <div className="small-muted mt-2">{status.busy ? "Sending..." : ""}</div>
@@ -192,6 +227,7 @@ export default function ChatPanel({
           </div>
         ) : null}
       </div>
+
 
       <div className="widget-footer">
         <MessageInput
