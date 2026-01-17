@@ -4,6 +4,10 @@
   background: var(--widget-bg);
   box-shadow: var(--shadow-2);
   border: 1px solid var(--border-2);
+  height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
+  display: flex;
+  flex-direction: column;
 }
 
 /* ===== Header (more premium) ===== */
@@ -15,6 +19,10 @@
   border-bottom:1px solid var(--border-2);
   background: var(--widget-header-bg);
   backdrop-filter: var(--topbar-blur);
+}
+.widget-header,
+.widget-footer {
+  flex: 0 0 auto;
 }
 
 /* Title block */
@@ -77,13 +85,11 @@
   background: var(--widget-body-bg);
   padding: 14px;
   min-height: 420px;
+  flex: 1 1 auto;
+  overflow: auto;
+  overscroll-behavior: contain;
 }
 
-.thread {
-  height: 420px;
-  overflow: auto;
-  padding: 6px 4px 10px 4px;
-}
 
 .time-marker {
   text-align: center;

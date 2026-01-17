@@ -1,10 +1,10 @@
 /* Apple-ish (minimal, bright, airy, "paper" not glass) */
 :root[data-theme="apple"] {
   /* Background: super subtle, almost flat */
-  --app-bg: #f5f5f7;
+  --app-bg: #ffffff;
   --app-bg-overlay:
-    radial-gradient(900px 500px at 20% 8%, rgba(10, 132, 255, .06), transparent 62%),
-    radial-gradient(700px 420px at 85% 18%, rgba(0, 0, 0, .035), transparent 60%);
+    radial-gradient(900px 500px at 20% 8%, rgb(255, 255, 255), transparent 62%),
+    radial-gradient(700px 420px at 85% 18%, rgba(255, 255, 255, 0.475), transparent 60%);
 
   /* Text */
   --text-1: #0b0f1a;

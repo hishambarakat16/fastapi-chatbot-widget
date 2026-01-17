@@ -4,6 +4,8 @@
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-1);
   backdrop-filter: var(--topbar-blur);
+  display: flex;
+  flex-direction: column;
 }
 
 .console-box {
@@ -14,6 +16,11 @@
   overflow: auto;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 12px;
+  flex: 1 1 auto;
+  min-height: 0;          /* required for flex children to actually shrink */
+  max-height: 320px;      /* adjust if you want taller/shorter */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .console-line {
