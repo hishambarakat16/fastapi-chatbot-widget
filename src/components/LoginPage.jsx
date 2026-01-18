@@ -22,7 +22,7 @@ export default function LoginPage({ brandName = "FastAPI Chat Tester", onLoggedI
   }
 
   return (
-    <div className="d-flex justify-content-center">
+    <div className="login-screen d-flex justify-content-center align-items-center">
       <div className="card card-glass" style={{ width: 420, maxWidth: "100%" }}>
         <div className="card-body text-start">
           <h4 className="mb-1">{brandName}</h4>

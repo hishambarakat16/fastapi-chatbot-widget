@@ -1,3 +1,17 @@
+
+:root {
+  --col-gap: 14px;                 /* spacing between chat + inspector columns */
+  --preview-col-w: 520px;          /* left column reserved width */
+  --preview-wrap-w: 420px;         /* actual widget width */
+  --tools-w: 420px;                /* inspector column width */
+
+  --ease-out: cubic-bezier(.2,.9,.2,1);
+  --ease-pop: cubic-bezier(.2,1.25,.2,1);
+}
+
+/* -----------------------------------------
+   Header / shell
+   ----------------------------------------- */
 .app-shell {
   max-width: 1200px;
 }
@@ -16,7 +30,8 @@
 }
 
 .kbd-hint {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   font-size: 12px;
   padding: 3px 8px;
   border-radius: 999px;
@@ -25,56 +40,74 @@
   color: var(--text-3);
 }
 
-/* ===== DevTools workspace that fills the screen under header ===== */
-
+/* -----------------------------------------
+   DevTools workspace layout
+   ----------------------------------------- */
 .devtools-layout {
-  /* take (viewport height - header area) so both columns can stretch */
-  height: calc(100vh - 140px); /* tweak this if your header height changes */
+  height: calc(100vh - 140px); /* tweak if header height changes */
   min-height: 520px;
   display: flex;
-  align-items: stretch; /* IMPORTANT: both columns same height */
-  gap: 14px; /* slightly tighter -> pulls inspector left */
+  align-items: stretch;
+  gap: var(--col-gap);
 }
 
-/* Left: preview column fills height */
+/* Left column */
 .preview-col {
-  flex: 0 0 520px; /* widen if you want more empty space inside the widget */
+  flex: 0 0 var(--preview-col-w);
   display: flex;
   align-items: stretch;
 }
 
+/* LOCK chat area width so it never "negotiates" during re-render */
 .preview-wrap {
-  width: 420px;
-  max-width: 100%;
+  width: var(--preview-wrap-w);
+  flex: 0 0 var(--preview-wrap-w);
+  max-width: var(--preview-wrap-w);
   margin: 0 auto;
-  height: 100%;          /* IMPORTANT */
-  display: flex;         /* IMPORTANT */
-  align-items: stretch;  /* IMPORTANT */
+  height: 100%;
+  display: flex;
+  align-items: stretch;
 }
 
-/* Make the widget stretch full height (your left red box) */
+/* ONLY this wrapper moves left/right (transform only, no layout) */
+.chat-mover {
+  width: var(--preview-wrap-w);
+  will-change: transform;
+  transform: translateX(0);
+  transition: transform 780ms var(--ease-out);
+}
+
+/* Make the widget stretch full height */
 .preview-wrap .widget {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
 
-/* Make the chat body area scroll instead of leaving whitespace */
+/* Make the chat body area scroll */
 .preview-wrap .widget-body {
   flex: 1 1 auto;
   overflow: auto;
 }
 
-/* Footer stays pinned at bottom */
+/* Footer stays pinned */
 .preview-wrap .widget-footer {
   flex: 0 0 auto;
 }
 
-/* Right: tooling column fills height */
+/* Right column (width animates, so chat moves while inspector implodes) */
 .tools-col {
-  flex: 0 0 420px; /* narrower than before to move it left */
+  flex: 0 0 var(--tools-w);
+  max-width: var(--tools-w);
+  overflow: hidden;
   display: flex;
   align-items: stretch;
+
+  transition:
+    flex-basis 760ms var(--ease-out),
+    max-width 760ms var(--ease-out),
+    opacity 220ms var(--ease-out);
+  will-change: flex-basis, max-width, opacity;
 }
 
 .tools-stack {
@@ -90,29 +123,28 @@
   flex: 0 0 auto;
 }
 
-/* Console fills remaining space (your right red box) */
+/* Console fills remaining space */
 .tools-bottom {
   flex: 1 1 auto;
-  min-height: 0; /* IMPORTANT so overflow works */
+  min-height: 0;
   display: flex;
 }
 
-/* Make console card fill the available space */
+/* Console card fills the available space */
 .tools-bottom .card {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
 }
 
-/* When inspector hidden, center preview */
+/* When inspector fully hidden, center preview */
 .devtools-layout.is-closed {
   justify-content: center;
 }
-.devtools-layout.is-closed .preview-col {
-  flex-basis: auto;
-}
 
-/* Responsive stack */
+/* -----------------------------------------
+   Responsive stack
+   ----------------------------------------- */
 @media (max-width: 992px) {
   .devtools-layout {
     height: auto;
@@ -122,8 +154,164 @@
   .preview-col,
   .tools-col {
     flex: 1 1 auto;
+    max-width: 100%;
   }
   .preview-wrap {
+    width: 100%;
+    max-width: 100%;
+    flex: 0 0 auto;
     height: auto;
+  }
+  .chat-mover {
+    width: 100%;
+  }
+}
+
+/* Login screen centers nicely under header */
+.login-screen {
+  min-height: calc(100dvh - 110px); /* adjust if header height differs */
+  padding: 16px 0;
+}
+
+/* -----------------------------------------
+   Cinematic enter (header first, then body)
+   ----------------------------------------- */
+.enter {
+  opacity: 0;
+  transform: translateY(26px);
+  filter: blur(2px);
+  transition:
+    opacity 980ms var(--ease-out),
+    transform 980ms var(--ease-out),
+    filter 980ms var(--ease-out);
+  will-change: opacity, transform, filter;
+}
+
+.enter.in {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+.enter.enter-header { transition-delay: 0ms; }
+.enter.enter-body { transition-delay: 220ms; }
+
+/* Theme cross-fade */
+.app-shell.theme-fade {
+  opacity: 0.78;
+  transition: opacity 520ms var(--ease-out);
+}
+
+/* -----------------------------------------
+   Inspector bubble (pure visual pop/implode)
+   ----------------------------------------- */
+.inspector-bubble {
+  transform-origin: 92% 14%;
+  will-change: transform, opacity, filter;
+}
+
+/* SHOW: pop in */
+@keyframes inspectorInPop {
+  0% {
+    opacity: 0;
+    transform: translate(18px, 10px) scale(0.02);
+    filter: blur(3px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(4px, 4px) scale(1);
+    filter: blur(0);
+  }
+}
+
+/* HIDE: exact reverse of show (no puff) */
+@keyframes inspectorOutImplode {
+  0% {
+    opacity: 1;
+    transform: translate(4px, 4px) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(18px, 10px) scale(0.02);
+    filter: blur(3px);
+  }
+}
+
+.inspector-bubble.in {
+  animation: inspectorInPop 760ms var(--ease-pop) both;
+}
+
+.inspector-bubble.out {
+  pointer-events: none;
+  animation: inspectorOutImplode 760ms var(--ease-out) both; /* match duration for sync */
+}
+
+/* -----------------------------------------
+   Synced layout motion with inspector open/close
+   ----------------------------------------- */
+
+/* Closing: collapse the tools column to 0 while bubble plays OUT */
+.devtools-layout.is-closing .tools-col,
+.devtools-layout.is-closed .tools-col {
+  flex-basis: 0px;
+  max-width: 0px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Opening: expand tools column while bubble plays IN */
+.devtools-layout.is-opening .tools-col {
+  transition:
+    flex-basis 860ms var(--ease-pop),
+    max-width 860ms var(--ease-pop),
+    opacity 220ms var(--ease-out);
+}
+
+/* -----------------------------------------
+   Chat motion (ONLY translateX on .chat-mover)
+   ----------------------------------------- */
+
+/* Inspector visible -> nudge chat left */
+.devtools-layout:not(.is-closed) .chat-mover {
+  transform: translateX(calc(-1 * var(--col-gap)));
+}
+
+/* Closing -> glide back to center while inspector implodes */
+.devtools-layout.is-closing .chat-mover {
+  transform: translateX(0);
+  transition: transform 760ms var(--ease-out);
+}
+
+/* Opening -> glide left while inspector pops */
+.devtools-layout.is-opening .chat-mover {
+  transform: translateX(calc(-1 * var(--col-gap)));
+  transition: transform 860ms var(--ease-pop);
+}
+
+/* Keep the “float” only after it’s fully closed */
+.devtools-layout.is-closed .preview-wrap .widget {
+  transition: transform 780ms var(--ease-out);
+  transform: translateY(-2px);
+}
+
+.devtools-layout:not(.is-closed) .preview-wrap .widget {
+  transform: none;
+}
+
+/* -----------------------------------------
+   Reduced motion
+   ----------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .enter,
+  .app-shell.theme-fade,
+  .tools-col,
+  .inspector-bubble,
+  .chat-mover,
+  .devtools-layout.is-closed .preview-wrap .widget {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
   }
 }
