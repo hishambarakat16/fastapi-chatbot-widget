@@ -244,9 +244,9 @@ export default function ChatPanel({
           onSend={() => onSend()}
           disabled={status.busy || !hasSession}
         />
-        <div className="small-muted mt-2">Ctrl+Enter to send.</div>
+        <div className="small-muted mt-2"></div>
 
-        <div className="revealCtl">
+        {/* <div className="revealCtl">
           <label className="small-muted">Reveal</label>
           <input
             type="range"
@@ -257,7 +257,7 @@ export default function ChatPanel({
             onChange={(e) => setRevealMs(Number(e.target.value))}
           />
           <span className="small-muted">{revealMs}ms</span>
-        </div>
+        </div> */}
       </div>
     </div>
   );

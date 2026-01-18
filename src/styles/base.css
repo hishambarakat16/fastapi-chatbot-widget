@@ -138,3 +138,37 @@ select {
   background-color: var(--primary);
   border-color: var(--primary);
 }
+
+.themeSelect{
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Keep bootstrap/select look, just make room for chevron */
+.themeSelect__select{
+  width: 140px;
+  padding-right: 30px; /* room for chevron */
+}
+
+/* Custom chevron overlay (doesn't break theme) */
+.themeSelect__chevron{
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  font-size: 12px;
+  line-height: 1;
+  color: var(--text-2);
+  opacity: 0.9;
+}
+
+/* Highlightable */
+.themeSelect:hover .themeSelect__select{
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border-1) 65%);
+}
+
+/* Nice focus ring when the select is focused */
+.themeSelect:focus-within .themeSelect__select{
+  box-shadow: 0 0 0 4px var(--input-focus);
+  border-color: color-mix(in srgb, var(--primary) 55%, var(--border-1) 45%);
+}

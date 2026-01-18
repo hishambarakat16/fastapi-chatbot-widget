@@ -1,3 +1,4 @@
+// src/components/HeaderBar.jsx
 import React from "react";
 import { THEMES } from "../theme.js";
 
@@ -20,21 +21,21 @@ export default function HeaderBar({
         </div>
 
         <div className="d-flex align-items-center gap-2">
-          <span className="kbd-hint">Ctrl+Enter</span>
-
-          <select
-            className="form-select form-select-sm"
-            aria-label="Theme"
-            style={{ width: 140 }}
-            value={theme}
-            onChange={(e) => onThemeChange(e.target.value)}
-          >
-            {THEMES.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.label}
-              </option>
-            ))}
-          </select>
+          <div className="themeSelect">
+            <select
+              className="form-select form-select-sm themeSelect__select"
+              aria-label="Theme"
+              value={theme}
+              onChange={(e) => onThemeChange(e.target.value)}
+            >
+              {THEMES.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            <span className="themeSelect__chevron" aria-hidden="true">▾</span>
+          </div>
 
           <button
             className={`btn btn-sm ${
