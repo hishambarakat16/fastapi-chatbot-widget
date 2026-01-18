@@ -1,7 +1,7 @@
-// fastapi-chat-tester/src/components/MessageList.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import MessageActions from "./MessageActions.jsx";
 import ReactMarkdown from "react-markdown";
+
 
 function normalizeText(s) {
   s = (s || "").replace(/\r\n/g, "\n");
@@ -12,7 +12,7 @@ function splitIntoChunks(text) {
   const t = normalizeText(text).trim();
   if (!t) return [];
 
-  const blocks = t.split(/\n\s*\n/g);
+  const blocks = t.split(/\n{2,}/g);
   const chunks = [];
   const SENTENCES_PER_CHUNK = 1;
 
@@ -22,6 +22,7 @@ function splitIntoChunks(text) {
       chunks.push(parts.slice(i, i + SENTENCES_PER_CHUNK).join(" "));
     }
   }
+
   return chunks.filter(Boolean);
 }
 
@@ -37,7 +38,6 @@ function TypingDots() {
 
 function AssistantBubble({ m, botName, revealMs }) {
   const isTyping = !m.text || !m.text.trim();
-
   const chunks = useMemo(() => splitIntoChunks(m.text), [m.text]);
   const [visibleN, setVisibleN] = useState(0);
 
@@ -76,8 +76,12 @@ function AssistantBubble({ m, botName, revealMs }) {
               <ReactMarkdown
                 components={{
                   p: ({ children }) => <p style={{ margin: 0 }}>{children}</p>,
-                  ol: ({ children }) => <ol style={{ margin: "0 0 0 18px" }}>{children}</ol>,
-                  li: ({ children }) => <li style={{ margin: "2px 0" }}>{children}</li>,
+                  ol: ({ children }) => (
+                    <ol style={{ margin: "0 0 0 18px" }}>{children}</ol>
+                  ),
+                  li: ({ children }) => (
+                    <li style={{ margin: "2px 0" }}>{children}</li>
+                  ),
                 }}
               >
                 {c}
@@ -108,6 +112,7 @@ export default function MessageList({
     <div className="cw-thread">
       {messages.map((m, idx) => {
         const isUser = m.role === "user";
+
         if (isUser) {
           return (
             <div key={idx} className="cw-row cw-right">
@@ -125,9 +130,12 @@ export default function MessageList({
             <div className="cw-avatar">S</div>
 
             <div className="cw-stack">
-              <AssistantBubble m={m} botName={botName} revealMs={revealMs} />
+              <AssistantBubble
+                m={m}
+                botName={botName}
+                revealMs={revealMs}
+              />
 
-              {/* Hide action row while it's typing/placeholder */}
               {!isTyping ? (
                 <MessageActions
                   text={m.text}
